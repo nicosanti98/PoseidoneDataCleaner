@@ -41,7 +41,7 @@ namespace PoseidoneDataCleaner
             this.txtDSN.Name = "txtDSN";
             this.txtDSN.Size = new System.Drawing.Size(299, 22);
             this.txtDSN.TabIndex = 8;
-            this.txtDSN.Text = "DSN";
+            this.txtDSN.Text = "ProvaPoseidone";
             // 
             // txtUser
             // 
@@ -49,7 +49,7 @@ namespace PoseidoneDataCleaner
             this.txtUser.Name = "txtUser";
             this.txtUser.Size = new System.Drawing.Size(108, 22);
             this.txtUser.TabIndex = 9;
-            this.txtUser.Text = "Username";
+            this.txtUser.Text = "sa";
             // 
             // txtPwd
             // 
@@ -57,7 +57,7 @@ namespace PoseidoneDataCleaner
             this.txtPwd.Name = "txtPwd";
             this.txtPwd.Size = new System.Drawing.Size(108, 22);
             this.txtPwd.TabIndex = 10;
-            this.txtPwd.Text = "Password";
+            this.txtPwd.Text = "saadmin";
             this.txtPwd.UseSystemPasswordChar = true;
             // 
             // btnConnect

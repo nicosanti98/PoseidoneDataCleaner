@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
+using System.Data.Common;
 
 namespace PoseidoneDataCleaner.Classes.DbInteraction
 {
@@ -41,33 +42,16 @@ namespace PoseidoneDataCleaner.Classes.DbInteraction
         }
 
         //Execute query with return object
-        public string ExecuteQueryWithResponse(String queryString)
+        public async Task<DbDataReader> ExecuteQueryWithResponse(String queryString)
         {
             List<object> response = new List<object>(); 
             openConnection();
             OdbcCommand cmd = new OdbcCommand(queryString, this.connection);
-            OdbcDataReader rd = cmd.ExecuteReader();
+            var rd = await cmd.ExecuteReaderAsync();
 
-            //Gets the number of columns of the result
-            int numberOfColumns = rd.VisibleFieldCount;
-
-            int j = 0; 
-            while (rd.Read())
-            {
-               
-                object item;
-                List<object> listItems = new List<object>();
-                for (int i = 0; i < numberOfColumns; i++)
-                {
-                    listItems.Add(rd[i]);
-                }
-                item = new { progr = j, data = listItems };
-                j++;
-                response.Add(item);
-            }
             
             //is returned a value of this form: {"progr": num, {"val":val,"val1":val1, ..., "valn":valn}}
-            return JsonSerializer.Serialize(response); 
+            return rd; 
         }
     }
 }

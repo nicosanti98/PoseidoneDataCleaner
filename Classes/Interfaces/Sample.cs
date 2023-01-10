@@ -9,8 +9,10 @@ namespace PoseidoneDataCleaner.Classes.Interfaces
     interface Sample
     {
         String name { get; set; }
-        String id { get; set; }
+        int id { get; set; }
         DateTime datetime { get; set; }
+        String stationName { get; set; }
+        int Flag { get; set; }
 
     }
 }

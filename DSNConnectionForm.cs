@@ -14,12 +14,15 @@ namespace PoseidoneDataCleaner
     public partial class DSNConnectionForm : Form
     {
         private OdbcConnection connection { get; set; }
-        private MainForm originForm; 
+        private MainForm originForm;
+        private List<Classes.Templates.MeasureAndId> itemsToPass = new List<Classes.Templates.MeasureAndId>();
         public DSNConnectionForm(MainForm originForm)
         {
             this.originForm = originForm; 
             InitializeComponent();
         }
+
+       
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
@@ -37,12 +40,20 @@ namespace PoseidoneDataCleaner
                 this.connection.Close();
                 Classes.DbInteraction.MenervaDbComponent menervaDb = new Classes.DbInteraction.MenervaDbComponent();
                 List<Classes.Templates.MeasureAndId> idandnames = menervaDb.getMeasureIdAndNames(this.connection);
+                ListViewItem item = new ListViewItem();
+                for(int i = 0; i < idandnames.Count; i++)
+                {
+                    this.originForm.checkedList.Items.Add(idandnames.ElementAt(i).stationName);
+                    this.originForm.checkedList.Items[i].SubItems.Add(idandnames.ElementAt(i).name);
+                }
+                this.originForm.ItemsToPass = idandnames;
+
 
                              
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                MessageBox.Show(ex.StackTrace, "Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
         }
     }

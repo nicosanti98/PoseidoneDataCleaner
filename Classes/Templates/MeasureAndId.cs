@@ -6,10 +6,14 @@ using System.Threading.Tasks;
 
 namespace PoseidoneDataCleaner.Classes.Templates
 {
-    class MeasureAndId : Interfaces.Sample
+    public class MeasureAndId : Interfaces.Sample
     {
-        public string name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public string id { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public DateTime datetime { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string name { get; set; }
+        public int id { get; set;  }
+        public DateTime datetime { get; set; }
+
+        public int stationId { get; set; }
+        public int Flag { get; set; }
+        public string stationName { get; set; }
     }
 }

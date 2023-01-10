@@ -78,6 +78,8 @@
     <Compile Include="Classes\DbInteraction\DbInteractor.cs" />
     <Compile Include="Classes\DbInteraction\MenervaDbComponent.cs" />
     <Compile Include="Classes\Interfaces\Sample.cs" />
+    <Compile Include="Classes\StatisticsTools\Filter.cs" />
+    <Compile Include="Classes\StatisticsTools\SampleStatistic.cs" />
     <Compile Include="Classes\Templates\MeasureAndId.cs" />
     <Compile Include="DSNConnectionForm.cs">
       <SubType>Form</SubType>
@@ -91,6 +93,12 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Menu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu.Designer.cs">
+      <DependentUpon>Menu.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="DSNConnectionForm.resx">
@@ -98,6 +106,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu.resx">
+      <DependentUpon>Menu.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
