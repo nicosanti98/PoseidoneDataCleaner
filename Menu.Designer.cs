@@ -89,10 +89,10 @@ namespace PoseidoneDataCleaner
             this.column2});
             this.listMeasures.FullRowSelect = true;
             this.listMeasures.HideSelection = false;
-            this.listMeasures.Location = new System.Drawing.Point(24, 260);
+            this.listMeasures.Location = new System.Drawing.Point(24, 261);
             this.listMeasures.Margin = new System.Windows.Forms.Padding(2);
             this.listMeasures.Name = "listMeasures";
-            this.listMeasures.Size = new System.Drawing.Size(529, 240);
+            this.listMeasures.Size = new System.Drawing.Size(523, 240);
             this.listMeasures.TabIndex = 9;
             this.listMeasures.UseCompatibleStateImageBehavior = false;
             this.listMeasures.View = System.Windows.Forms.View.Details;
