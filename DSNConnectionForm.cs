@@ -28,6 +28,7 @@ namespace PoseidoneDataCleaner
         {
             OdbcConnection conn = new OdbcConnection("DSN=" + txtDSN.Text + ";Uid=" + txtUser.Text + ";Pwd=" + txtPwd.Text);
             this.connection = conn;
+            Program.dsnconnection = conn.ConnectionString;
 
             try
             {
@@ -41,7 +42,10 @@ namespace PoseidoneDataCleaner
                 Classes.DbInteraction.MenervaDbComponent menervaDb = new Classes.DbInteraction.MenervaDbComponent();
                 List<Classes.Templates.MeasureAndId> idandnames = menervaDb.getMeasureIdAndNames(this.connection);
                 ListViewItem item = new ListViewItem();
-                for(int i = 0; i < idandnames.Count; i++)
+                               
+                idandnames = idandnames.OrderBy(x=> x.stationName).ThenBy(y => y.name).ToList();
+                                              
+                for (int i = 0; i < idandnames.Count; i++)
                 {
                     this.originForm.checkedList.Items.Add(idandnames.ElementAt(i).stationName);
                     this.originForm.checkedList.Items[i].SubItems.Add(idandnames.ElementAt(i).name);

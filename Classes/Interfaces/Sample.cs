@@ -14,5 +14,7 @@ namespace PoseidoneDataCleaner.Classes.Interfaces
         String stationName { get; set; }
         int Flag { get; set; }
 
+        double value { get; set; }
+
     }
 }

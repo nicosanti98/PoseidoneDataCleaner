@@ -8,10 +8,14 @@ namespace PoseidoneDataCleaner
 {
     static class Program
     {
+        public static string FolderPath = "";
+        public static string dsnconnection= "";
+
         /// <summary>
         /// Punto di ingresso principale dell'applicazione.
         /// </summary>
         [STAThread]
+
 
 
         static void Main()

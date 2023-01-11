@@ -43,6 +43,8 @@ namespace PoseidoneDataCleaner
             this.label1 = new System.Windows.Forms.Label();
             this.nudLowTreshold = new System.Windows.Forms.NumericUpDown();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.btnBrowse = new System.Windows.Forms.Button();
+            this.fbdPath = new System.Windows.Forms.FolderBrowserDialog();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudSampleNum)).BeginInit();
@@ -63,6 +65,7 @@ namespace PoseidoneDataCleaner
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.btnBrowse);
             this.tabPage1.Controls.Add(this.listMeasures);
             this.tabPage1.Controls.Add(this.btnGenerateFile);
             this.tabPage1.Controls.Add(this.lblMeasure);
@@ -80,7 +83,6 @@ namespace PoseidoneDataCleaner
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Median Filter";
             this.tabPage1.UseVisualStyleBackColor = true;
-            this.tabPage1.Click += new System.EventHandler(this.tabPage1_Click);
             // 
             // listMeasures
             // 
@@ -101,7 +103,7 @@ namespace PoseidoneDataCleaner
             // column1
             // 
             this.column1.Text = "Station";
-            this.column1.Width = 120;
+            this.column1.Width = 257;
             // 
             // column2
             // 
@@ -117,14 +119,14 @@ namespace PoseidoneDataCleaner
             this.btnGenerateFile.TabIndex = 8;
             this.btnGenerateFile.Text = "Generate File";
             this.btnGenerateFile.UseVisualStyleBackColor = true;
-            this.btnGenerateFile.Click += new System.EventHandler(this.btnSave_Click);
+            this.btnGenerateFile.Click += new System.EventHandler(this.btnGenerateFile_Click);
             // 
             // lblMeasure
             // 
             this.lblMeasure.AutoSize = true;
             this.lblMeasure.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMeasure.ForeColor = System.Drawing.Color.Green;
-            this.lblMeasure.Location = new System.Drawing.Point(188, 17);
+            this.lblMeasure.Location = new System.Drawing.Point(106, 21);
             this.lblMeasure.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblMeasure.Name = "lblMeasure";
             this.lblMeasure.Size = new System.Drawing.Size(0, 20);
@@ -162,7 +164,7 @@ namespace PoseidoneDataCleaner
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(22, 174);
+            this.label3.Location = new System.Drawing.Point(24, 173);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(82, 13);
@@ -171,7 +173,7 @@ namespace PoseidoneDataCleaner
             // 
             // nudHigTreshold
             // 
-            this.nudHigTreshold.Location = new System.Drawing.Point(192, 125);
+            this.nudHigTreshold.Location = new System.Drawing.Point(192, 127);
             this.nudHigTreshold.Margin = new System.Windows.Forms.Padding(2);
             this.nudHigTreshold.Maximum = new decimal(new int[] {
             10000,
@@ -185,7 +187,7 @@ namespace PoseidoneDataCleaner
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(22, 127);
+            this.label2.Location = new System.Drawing.Point(24, 127);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(73, 13);
@@ -195,7 +197,7 @@ namespace PoseidoneDataCleaner
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(21, 97);
+            this.label1.Location = new System.Drawing.Point(26, 87);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(71, 13);
@@ -204,7 +206,7 @@ namespace PoseidoneDataCleaner
             // 
             // nudLowTreshold
             // 
-            this.nudLowTreshold.Location = new System.Drawing.Point(192, 90);
+            this.nudLowTreshold.Location = new System.Drawing.Point(192, 85);
             this.nudLowTreshold.Margin = new System.Windows.Forms.Padding(2);
             this.nudLowTreshold.Maximum = new decimal(new int[] {
             10000,
@@ -225,6 +227,16 @@ namespace PoseidoneDataCleaner
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // btnBrowse
+            // 
+            this.btnBrowse.Location = new System.Drawing.Point(22, 542);
+            this.btnBrowse.Name = "btnBrowse";
+            this.btnBrowse.Size = new System.Drawing.Size(75, 23);
+            this.btnBrowse.TabIndex = 1;
+            this.btnBrowse.Text = "Browse...";
+            this.btnBrowse.UseVisualStyleBackColor = false;
+            this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
             // 
             // frmMenu
             // 
@@ -261,5 +273,7 @@ namespace PoseidoneDataCleaner
         private System.Windows.Forms.ColumnHeader column1;
         private System.Windows.Forms.ColumnHeader column2;
         private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.Button btnBrowse;
+        private System.Windows.Forms.FolderBrowserDialog fbdPath;
     }
 }

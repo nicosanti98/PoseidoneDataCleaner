@@ -81,6 +81,7 @@
     <Compile Include="Classes\StatisticsTools\Filter.cs" />
     <Compile Include="Classes\StatisticsTools\SampleStatistic.cs" />
     <Compile Include="Classes\Templates\MeasureAndId.cs" />
+    <Compile Include="Classes\Templates\Sample.cs" />
     <Compile Include="DSNConnectionForm.cs">
       <SubType>Form</SubType>
     </Compile>

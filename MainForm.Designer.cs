@@ -42,9 +42,10 @@ namespace PoseidoneDataCleaner
             // lbl1
             // 
             this.lbl1.AutoSize = true;
-            this.lbl1.Location = new System.Drawing.Point(12, 9);
+            this.lbl1.Location = new System.Drawing.Point(9, 7);
+            this.lbl1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl1.Name = "lbl1";
-            this.lbl1.Size = new System.Drawing.Size(597, 17);
+            this.lbl1.Size = new System.Drawing.Size(448, 13);
             this.lbl1.TabIndex = 0;
             this.lbl1.Text = "Welcome in the Data Normalizer tool. Choose a file .xlsx containing data in Mener" +
     "va db format";
@@ -55,9 +56,10 @@ namespace PoseidoneDataCleaner
             // 
             // btnDsnConnect
             // 
-            this.btnDsnConnect.Location = new System.Drawing.Point(496, 44);
+            this.btnDsnConnect.Location = new System.Drawing.Point(372, 36);
+            this.btnDsnConnect.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnDsnConnect.Name = "btnDsnConnect";
-            this.btnDsnConnect.Size = new System.Drawing.Size(113, 23);
+            this.btnDsnConnect.Size = new System.Drawing.Size(85, 19);
             this.btnDsnConnect.TabIndex = 5;
             this.btnDsnConnect.Text = "Connect DSN";
             this.btnDsnConnect.UseVisualStyleBackColor = true;
@@ -66,16 +68,18 @@ namespace PoseidoneDataCleaner
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 47);
+            this.label2.Location = new System.Drawing.Point(9, 38);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(0, 17);
+            this.label2.Size = new System.Drawing.Size(0, 13);
             this.label2.TabIndex = 7;
             // 
             // btnNext
             // 
-            this.btnNext.Location = new System.Drawing.Point(274, 610);
+            this.btnNext.Location = new System.Drawing.Point(206, 496);
+            this.btnNext.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnNext.Name = "btnNext";
-            this.btnNext.Size = new System.Drawing.Size(111, 37);
+            this.btnNext.Size = new System.Drawing.Size(83, 30);
             this.btnNext.TabIndex = 8;
             this.btnNext.Text = "Next";
             this.btnNext.UseVisualStyleBackColor = true;
@@ -89,9 +93,10 @@ namespace PoseidoneDataCleaner
             this.Column2});
             this.checkedList.FullRowSelect = true;
             this.checkedList.HideSelection = false;
-            this.checkedList.Location = new System.Drawing.Point(15, 96);
+            this.checkedList.Location = new System.Drawing.Point(11, 118);
+            this.checkedList.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.checkedList.Name = "checkedList";
-            this.checkedList.Size = new System.Drawing.Size(645, 494);
+            this.checkedList.Size = new System.Drawing.Size(485, 362);
             this.checkedList.TabIndex = 9;
             this.checkedList.UseCompatibleStateImageBehavior = false;
             this.checkedList.View = System.Windows.Forms.View.Details;
@@ -108,14 +113,15 @@ namespace PoseidoneDataCleaner
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(682, 682);
+            this.ClientSize = new System.Drawing.Size(512, 554);
             this.Controls.Add(this.checkedList);
             this.Controls.Add(this.btnNext);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.btnDsnConnect);
             this.Controls.Add(this.lbl1);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "MainForm";
             this.Text = "Data Normalizer";
             this.ResumeLayout(false);

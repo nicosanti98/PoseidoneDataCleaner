@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using System.Threading;
+using System.Data.Odbc;
 
 namespace PoseidoneDataCleaner
 {
@@ -15,6 +18,7 @@ namespace PoseidoneDataCleaner
     {
 
         ListView checkedList;
+        List<Classes.Templates.MeasureAndId> checkeditems = new List<Classes.Templates.MeasureAndId>();
         List<Classes.Templates.MeasureAndId> items;
         List<Classes.StatisticsTools.SampleStatistic> settingsOveritems = new List<Classes.StatisticsTools.SampleStatistic>();
         string station = "";
@@ -25,9 +29,15 @@ namespace PoseidoneDataCleaner
         {
             InitializeComponent();
 
+
+
             //Data to consider
             this.checkedList = dataSelected;
             this.items = items;
+
+
+
+            
 
             if (listMeasures.SelectedItems.Count <= 0)
             {
@@ -39,7 +49,21 @@ namespace PoseidoneDataCleaner
 
                 this.listMeasures.Items.Add(dataSelected.CheckedItems[i].Text);
                 this.listMeasures.Items[i].SubItems.Add(dataSelected.CheckedItems[i].SubItems[1]);
+
+                Classes.Templates.MeasureAndId checkeditem = new Classes.Templates.MeasureAndId();
+
+                checkeditem.stationName = (dataSelected.CheckedItems[i].Text);
+                checkeditem.name  = (dataSelected.CheckedItems[i].SubItems[1].Text);
+
+                checkeditem.id = items.Find(x => x.stationName == checkeditem.stationName && x.name == checkeditem.name).id;
+
+                checkeditems.Add(checkeditem);
+
             }
+
+            Thread t = new Thread(new ThreadStart(GetSamples));
+            t.Start();
+
         }
 
         private void listMeasures_SelectedIndexChanged(object sender, EventArgs e)
@@ -124,14 +148,6 @@ namespace PoseidoneDataCleaner
             }
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-
-
-
-
-        }
-
         public void SaveSettings(string measure, string station)
         {
             bool updated = false;
@@ -168,9 +184,40 @@ namespace PoseidoneDataCleaner
             }
         }
 
-        private void tabPage1_Click(object sender, EventArgs e)
+        private void btnGenerateFile_Click(object sender, EventArgs e)
         {
 
         }
+
+        private void btnBrowse_Click(object sender, EventArgs e)
+        {
+           
+           if (fbdPath.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbdPath.SelectedPath))
+           {
+                Program.FolderPath = fbdPath.SelectedPath;
+           }
+
+         
+        }
+
+
+        private void GetSamples()
+        {
+            List<Classes.Templates.Sample>[] samples = new List<Classes.Templates.Sample>[this.checkeditems.Count];
+            Classes.DbInteraction.MenervaDbComponent menervaDbComponent = new Classes.DbInteraction.MenervaDbComponent();
+            Classes.DbInteraction.DbInteractor dbInteractor = new Classes.DbInteraction.DbInteractor(new OdbcConnection(Program.dsnconnection));
+
+            //List<Classes.>
+            for (int i= 0; i<this.checkeditems.Count; i++)
+            {
+                samples[i] = menervaDbComponent.GetSamples(new OdbcConnection(Program.dsnconnection), checkeditems.ElementAt(i).id, DateTime.Parse("2021-01-01"), DateTime.Parse("2022-01-01"));
+                
+                for(int j=0; j < samples[i].Count; j++)
+                {
+                    samples[i].ElementAt(j).stationName = checkeditems[i].stationName;
+                }
+            }
+        }
+
     }
 }
