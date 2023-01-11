@@ -24,6 +24,8 @@ namespace PoseidoneDataCleaner
         string station = "";
         string measureName = "";
         bool changes = false;
+        List<Classes.Templates.Sample>[] samples; 
+
 
         public frmMenu(ListView dataSelected, List<Classes.Templates.MeasureAndId> items)
         {
@@ -41,7 +43,7 @@ namespace PoseidoneDataCleaner
 
             if (listMeasures.SelectedItems.Count <= 0)
             {
-                btnGenerateFile.Enabled = false;
+               
             }
             for (int i = 0; i < dataSelected.CheckedItems.Count; i++)
             {
@@ -63,6 +65,7 @@ namespace PoseidoneDataCleaner
 
             Thread t = new Thread(new ThreadStart(GetSamples));
             t.Start();
+            t.Join();
 
         }
 
@@ -186,7 +189,17 @@ namespace PoseidoneDataCleaner
 
         private void btnGenerateFile_Click(object sender, EventArgs e)
         {
-
+            StreamWriter sw = new StreamWriter("C:\\Users\\Administrator\\Desktop\\CODING\\porcodio.txt");
+            for(int i = 0; i < samples.Length; i++)
+            {
+                for(int j = 0; j < samples[i].Count; j++)
+                {
+                    sw.WriteLine(samples[i].ElementAt(j).stationName + "-" + samples[i].ElementAt(j).datetime + "-" + samples[i].ElementAt(j).value);
+                }
+                
+            }
+            sw.Close();
+     
         }
 
         private void btnBrowse_Click(object sender, EventArgs e)
@@ -203,20 +216,22 @@ namespace PoseidoneDataCleaner
 
         private void GetSamples()
         {
-            List<Classes.Templates.Sample>[] samples = new List<Classes.Templates.Sample>[this.checkeditems.Count];
+            samples = new List<Classes.Templates.Sample>[checkeditems.Count];
             Classes.DbInteraction.MenervaDbComponent menervaDbComponent = new Classes.DbInteraction.MenervaDbComponent();
             Classes.DbInteraction.DbInteractor dbInteractor = new Classes.DbInteraction.DbInteractor(new OdbcConnection(Program.dsnconnection));
 
             //List<Classes.>
             for (int i= 0; i<this.checkeditems.Count; i++)
             {
-                samples[i] = menervaDbComponent.GetSamples(new OdbcConnection(Program.dsnconnection), checkeditems.ElementAt(i).id, DateTime.Parse("2021-01-01"), DateTime.Parse("2022-01-01"));
+                samples[i] = menervaDbComponent.GetSamples(new OdbcConnection(Program.dsnconnection), checkeditems.ElementAt(i).id, DateTime.Parse("2021-01-01"), DateTime.Parse("2022-01-01"), cbNotNull.Checked);
                 
                 for(int j=0; j < samples[i].Count; j++)
                 {
                     samples[i].ElementAt(j).stationName = checkeditems[i].stationName;
                 }
             }
+
+            
         }
 
     }

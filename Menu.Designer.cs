@@ -45,6 +45,7 @@ namespace PoseidoneDataCleaner
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.btnBrowse = new System.Windows.Forms.Button();
             this.fbdPath = new System.Windows.Forms.FolderBrowserDialog();
+            this.cbNotNull = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudSampleNum)).BeginInit();
@@ -65,6 +66,7 @@ namespace PoseidoneDataCleaner
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.cbNotNull);
             this.tabPage1.Controls.Add(this.btnBrowse);
             this.tabPage1.Controls.Add(this.listMeasures);
             this.tabPage1.Controls.Add(this.btnGenerateFile);
@@ -238,6 +240,16 @@ namespace PoseidoneDataCleaner
             this.btnBrowse.UseVisualStyleBackColor = false;
             this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
             // 
+            // cbNotNull
+            // 
+            this.cbNotNull.AutoSize = true;
+            this.cbNotNull.Location = new System.Drawing.Point(385, 83);
+            this.cbNotNull.Name = "cbNotNull";
+            this.cbNotNull.Size = new System.Drawing.Size(128, 17);
+            this.cbNotNull.TabIndex = 10;
+            this.cbNotNull.Text = "Set NULL values to 0";
+            this.cbNotNull.UseVisualStyleBackColor = true;
+            // 
             // frmMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -275,5 +287,6 @@ namespace PoseidoneDataCleaner
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Button btnBrowse;
         private System.Windows.Forms.FolderBrowserDialog fbdPath;
+        private System.Windows.Forms.CheckBox cbNotNull;
     }
 }

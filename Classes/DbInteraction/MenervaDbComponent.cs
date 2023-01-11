@@ -45,7 +45,7 @@ namespace PoseidoneDataCleaner.Classes.DbInteraction
 
 
 
-        public List<Classes.Templates.Sample> GetSamples(OdbcConnection conn, int sampleID, DateTime start, DateTime stop)
+        public List<Classes.Templates.Sample> GetSamples(OdbcConnection conn, int sampleID, DateTime start, DateTime stop, bool notnull)
         {
 
             List<Classes.Templates.Sample> list = new List<Classes.Templates.Sample>();
@@ -70,9 +70,17 @@ namespace PoseidoneDataCleaner.Classes.DbInteraction
                                 ":" +
                                 (stop.Second > 9 ? stop.Second.ToString() : "0" + stop.Second.ToString());
 
+            String query = "";
 
-
-            String query = "SELECT SAMPLETIME, SAMPLEVALUE, SAMPLEFLAG FROM MEASURE#" + sampleID + " WHERE SAMPLETIME BETWEEN '" + startDate+ "' AND '" + endDate + "'" + "AND SAMPLEVALUE IS NOT NULL";
+            if (notnull)
+            {
+                query = "SELECT SAMPLETIME, SAMPLEVALUE, SAMPLEFLAG FROM MEASURE#" + sampleID + " WHERE SAMPLETIME BETWEEN '" + startDate + "' AND '" + endDate + "'" ;
+            }
+            else
+            {
+                query = "SELECT SAMPLETIME, SAMPLEVALUE, SAMPLEFLAG FROM MEASURE#" + sampleID + " WHERE SAMPLETIME BETWEEN '" + startDate + "' AND '" + endDate + "'" + " AND SAMPLEVALUE IS NOT NULL AND SAMPLEFLAG IS NOT NULL"; 
+            }
+            
             Task<DbDataReader> reader = interactor.ExecuteQueryWithResponse(query);
             
             int i = 0;
@@ -81,8 +89,33 @@ namespace PoseidoneDataCleaner.Classes.DbInteraction
             {
                 Classes.Templates.Sample item = new Classes.Templates.Sample();
                 item.datetime = DateTime.Parse(reader.Result[0].ToString());
-                item.value = double.Parse(reader.Result[1].ToString());
-                item.Flag = int.Parse(reader.Result[2].ToString());
+                if(notnull) {
+                    if(reader.Result[1].ToString() == "NULL")
+                    {
+                        item.value = 0;
+                    }
+                    else
+                    {
+                        item.value = double.Parse(reader.Result[1].ToString());
+                    }
+                    if(reader.Result[2].ToString() == "NULL")
+                    {
+                        item.Flag = 0;
+                    }
+                    else
+                    {
+                        item.Flag = int.Parse(reader.Result[2].ToString());
+                    }
+                    
+                }
+                else
+                {
+                    item.value = double.Parse(reader.Result[1].ToString());
+                    item.Flag = int.Parse(reader.Result[2].ToString());
+
+                }
+                
+               
                 item.id = sampleID;
                 list.Add(item);
             }
