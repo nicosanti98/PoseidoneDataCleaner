@@ -23,25 +23,45 @@ namespace PoseidoneDataCleaner
         internal List<MeasureAndId> ItemsToPass { get => itemsToPass; set => itemsToPass = value; }
 
         private List<Classes.Templates.MeasureAndId> itemsToPass;
-
+        
         public MainForm()
         {
             InitializeComponent();
+            btnNext.Enabled = false;
         }
 
         private void btnDsnConnect_Click(object sender, EventArgs e)
         {
             Form newForm = new DSNConnectionForm(this);
-            newForm.Show();
+
+            if(newForm.ShowDialog() == DialogResult.OK)
+            {
+                btnNext.Enabled = true;
+            }
+            
             
         }
 
         private void btnNext_Click(object sender, EventArgs e)
         {
             
-            frmMenu menuForm = new frmMenu(this.checkedList, this.itemsToPass);
-            menuForm.Show();
-            this.Hide();
+            if(checkedList.CheckedItems.Count > 0)
+            {
+                frmMenu menuForm = new frmMenu(this.checkedList, this.itemsToPass);
+
+                this.Hide();
+                if (menuForm.ShowDialog() == DialogResult.OK)
+                {
+                    this.Show();
+                }
+            }
+            else
+            {
+                MessageBox.Show("You have to check at least one measure.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+
+            
+
 
         }
     }

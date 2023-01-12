@@ -59,6 +59,8 @@ namespace PoseidoneDataCleaner
             {
                 MessageBox.Show(ex.StackTrace, "Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
+
+            btnConnect.DialogResult = DialogResult.OK;
         }
     }
 }

@@ -31,6 +31,8 @@ namespace PoseidoneDataCleaner
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.cbNotNull = new System.Windows.Forms.CheckBox();
+            this.btnBrowse = new System.Windows.Forms.Button();
             this.listMeasures = new System.Windows.Forms.ListView();
             this.column1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.column2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -43,9 +45,8 @@ namespace PoseidoneDataCleaner
             this.label1 = new System.Windows.Forms.Label();
             this.nudLowTreshold = new System.Windows.Forms.NumericUpDown();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.btnBrowse = new System.Windows.Forms.Button();
             this.fbdPath = new System.Windows.Forms.FolderBrowserDialog();
-            this.cbNotNull = new System.Windows.Forms.CheckBox();
+            this.btnBack = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudSampleNum)).BeginInit();
@@ -57,15 +58,16 @@ namespace PoseidoneDataCleaner
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Location = new System.Drawing.Point(1, -4);
+            this.tabControl1.Location = new System.Drawing.Point(2, -1);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(590, 641);
+            this.tabControl1.Size = new System.Drawing.Size(589, 638);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.btnBack);
             this.tabPage1.Controls.Add(this.cbNotNull);
             this.tabPage1.Controls.Add(this.btnBrowse);
             this.tabPage1.Controls.Add(this.listMeasures);
@@ -81,10 +83,30 @@ namespace PoseidoneDataCleaner
             this.tabPage1.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(2);
-            this.tabPage1.Size = new System.Drawing.Size(582, 615);
+            this.tabPage1.Size = new System.Drawing.Size(581, 612);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Median Filter";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // cbNotNull
+            // 
+            this.cbNotNull.AutoSize = true;
+            this.cbNotNull.Location = new System.Drawing.Point(385, 83);
+            this.cbNotNull.Name = "cbNotNull";
+            this.cbNotNull.Size = new System.Drawing.Size(128, 17);
+            this.cbNotNull.TabIndex = 10;
+            this.cbNotNull.Text = "Set NULL values to 0";
+            this.cbNotNull.UseVisualStyleBackColor = true;
+            // 
+            // btnBrowse
+            // 
+            this.btnBrowse.Location = new System.Drawing.Point(22, 542);
+            this.btnBrowse.Name = "btnBrowse";
+            this.btnBrowse.Size = new System.Drawing.Size(75, 23);
+            this.btnBrowse.TabIndex = 1;
+            this.btnBrowse.Text = "Browse...";
+            this.btnBrowse.UseVisualStyleBackColor = false;
+            this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
             // 
             // listMeasures
             // 
@@ -230,25 +252,15 @@ namespace PoseidoneDataCleaner
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // btnBrowse
+            // btnBack
             // 
-            this.btnBrowse.Location = new System.Drawing.Point(22, 542);
-            this.btnBrowse.Name = "btnBrowse";
-            this.btnBrowse.Size = new System.Drawing.Size(75, 23);
-            this.btnBrowse.TabIndex = 1;
-            this.btnBrowse.Text = "Browse...";
-            this.btnBrowse.UseVisualStyleBackColor = false;
-            this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
-            // 
-            // cbNotNull
-            // 
-            this.cbNotNull.AutoSize = true;
-            this.cbNotNull.Location = new System.Drawing.Point(385, 83);
-            this.cbNotNull.Name = "cbNotNull";
-            this.cbNotNull.Size = new System.Drawing.Size(128, 17);
-            this.cbNotNull.TabIndex = 10;
-            this.cbNotNull.Text = "Set NULL values to 0";
-            this.cbNotNull.UseVisualStyleBackColor = true;
+            this.btnBack.Location = new System.Drawing.Point(3, 5);
+            this.btnBack.Name = "btnBack";
+            this.btnBack.Size = new System.Drawing.Size(51, 25);
+            this.btnBack.TabIndex = 1;
+            this.btnBack.Text = "Back";
+            this.btnBack.UseVisualStyleBackColor = true;
+            this.btnBack.Click += new System.EventHandler(this.btnBack_Click);
             // 
             // frmMenu
             // 
@@ -288,5 +300,6 @@ namespace PoseidoneDataCleaner
         private System.Windows.Forms.Button btnBrowse;
         private System.Windows.Forms.FolderBrowserDialog fbdPath;
         private System.Windows.Forms.CheckBox cbNotNull;
+        private System.Windows.Forms.Button btnBack;
     }
 }

@@ -24,22 +24,16 @@ namespace PoseidoneDataCleaner
         string station = "";
         string measureName = "";
         bool changes = false;
-        List<Classes.Templates.Sample>[] samples; 
-
+        List<Classes.Templates.Sample>[] samples;
+        Thread t;
 
         public frmMenu(ListView dataSelected, List<Classes.Templates.MeasureAndId> items)
         {
             InitializeComponent();
 
-
-
             //Data to consider
             this.checkedList = dataSelected;
             this.items = items;
-
-
-
-            
 
             if (listMeasures.SelectedItems.Count <= 0)
             {
@@ -47,8 +41,6 @@ namespace PoseidoneDataCleaner
             }
             for (int i = 0; i < dataSelected.CheckedItems.Count; i++)
             {
-
-
                 this.listMeasures.Items.Add(dataSelected.CheckedItems[i].Text);
                 this.listMeasures.Items[i].SubItems.Add(dataSelected.CheckedItems[i].SubItems[1]);
 
@@ -63,21 +55,18 @@ namespace PoseidoneDataCleaner
 
             }
 
-            Thread t = new Thread(new ThreadStart(GetSamples));
+            t = new Thread(new ThreadStart(GetSamples));
             t.Start();
-            t.Join();
 
         }
 
         private void listMeasures_SelectedIndexChanged(object sender, EventArgs e)
         {
-
             decimal nudHiTresh = nudHigTreshold.Value;
             decimal nudLowTresh = nudLowTreshold.Value;
             decimal nudSample = nudSampleNum.Value;
 
             string[] subs = { " - " };
-
 
             if (lblMeasure.Text != "")
             {
@@ -89,7 +78,6 @@ namespace PoseidoneDataCleaner
             btnGenerateFile.Enabled = true;
             if (listMeasures.SelectedItems.Count > 0)
             {
-
                 nudHigTreshold.Value = 0;
                 nudLowTreshold.Value = 0;
                 nudSampleNum.Value = 3;
@@ -104,7 +92,6 @@ namespace PoseidoneDataCleaner
                     nudLowTreshold.Value = decimal.Parse(item.lowTreshold.ToString());
                     nudSampleNum.Value = decimal.Parse(item.SamplesRange.ToString());
                 }
-
             }
             else
             {
@@ -125,7 +112,6 @@ namespace PoseidoneDataCleaner
                         if (dr == DialogResult.Yes)
                         {
                             SaveSettings(measureName, station);
-
                         }
                     }
                 }
@@ -144,12 +130,70 @@ namespace PoseidoneDataCleaner
                         if (dialog == DialogResult.Yes)
                         {
                             SaveSettings(measureName, station);
-
                         }
                     }
                 }
             }
         }
+       
+
+        private void btnBrowse_Click(object sender, EventArgs e)
+        {
+           if (fbdPath.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbdPath.SelectedPath))
+           {
+                Program.FolderPath = fbdPath.SelectedPath;
+           }
+            
+        }
+
+        private void btnBack_Click(object sender, EventArgs e)
+        {
+            t.Abort();
+            DialogResult = DialogResult.Cancel;
+            this.Close();
+        }
+
+        private void GetSamples()
+        {
+            samples = new List<Classes.Templates.Sample>[checkeditems.Count];
+            Classes.DbInteraction.MenervaDbComponent menervaDbComponent = new Classes.DbInteraction.MenervaDbComponent();
+            Classes.DbInteraction.DbInteractor dbInteractor = new Classes.DbInteraction.DbInteractor(new OdbcConnection(Program.dsnconnection));
+
+            //List<Classes.>
+            for (int i= 0; i<this.checkeditems.Count; i++)
+            {
+                samples[i] = menervaDbComponent.GetSamples(new OdbcConnection(Program.dsnconnection), checkeditems.ElementAt(i).id, DateTime.Parse("2021-01-01"), DateTime.Parse("2022-01-01"), cbNotNull.Checked);
+                
+                for(int j=0; j < samples[i].Count; j++)
+                {
+                    samples[i].ElementAt(j).stationName = checkeditems[i].stationName;
+                }
+            }
+
+            MessageBox.Show("Samples correctly loaded", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            
+        }
+
+        private void btnGenerateFile_Click(object sender, EventArgs e)
+        {
+            if (t.ThreadState == ThreadState.Stopped)
+            {
+                StreamWriter sw = new StreamWriter("C:\\Users\\Administrator\\Desktop\\CODING\\test.txt");
+                for (int i = 0; i < samples.Length; i++)
+                {
+                    for (int j = 0; j < samples[i].Count; j++)
+                    {
+                        sw.WriteLine(samples[i].ElementAt(j).stationName + "-" + samples[i].ElementAt(j).datetime + "-" + samples[i].ElementAt(j).value);
+                    }
+                }
+                sw.Close();
+            }
+            else
+            {
+                MessageBox.Show("Wait until samples are fully loaded", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
 
         public void SaveSettings(string measure, string station)
         {
@@ -187,52 +231,6 @@ namespace PoseidoneDataCleaner
             }
         }
 
-        private void btnGenerateFile_Click(object sender, EventArgs e)
-        {
-            StreamWriter sw = new StreamWriter("C:\\Users\\Administrator\\Desktop\\CODING\\porcodio.txt");
-            for(int i = 0; i < samples.Length; i++)
-            {
-                for(int j = 0; j < samples[i].Count; j++)
-                {
-                    sw.WriteLine(samples[i].ElementAt(j).stationName + "-" + samples[i].ElementAt(j).datetime + "-" + samples[i].ElementAt(j).value);
-                }
-                
-            }
-            sw.Close();
-     
-        }
-
-        private void btnBrowse_Click(object sender, EventArgs e)
-        {
-           
-           if (fbdPath.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbdPath.SelectedPath))
-           {
-                Program.FolderPath = fbdPath.SelectedPath;
-           }
-
-         
-        }
-
-
-        private void GetSamples()
-        {
-            samples = new List<Classes.Templates.Sample>[checkeditems.Count];
-            Classes.DbInteraction.MenervaDbComponent menervaDbComponent = new Classes.DbInteraction.MenervaDbComponent();
-            Classes.DbInteraction.DbInteractor dbInteractor = new Classes.DbInteraction.DbInteractor(new OdbcConnection(Program.dsnconnection));
-
-            //List<Classes.>
-            for (int i= 0; i<this.checkeditems.Count; i++)
-            {
-                samples[i] = menervaDbComponent.GetSamples(new OdbcConnection(Program.dsnconnection), checkeditems.ElementAt(i).id, DateTime.Parse("2021-01-01"), DateTime.Parse("2022-01-01"), cbNotNull.Checked);
-                
-                for(int j=0; j < samples[i].Count; j++)
-                {
-                    samples[i].ElementAt(j).stationName = checkeditems[i].stationName;
-                }
-            }
-
-            
-        }
 
     }
 }
