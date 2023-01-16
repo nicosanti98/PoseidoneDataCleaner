@@ -11,33 +11,43 @@ using System.Windows.Forms;
 using System.Xml.Linq;
 using System.Threading;
 using System.Data.Odbc;
+using static System.Net.WebRequestMethods;
+using System.Security.AccessControl;
+using System.Security.Principal;
 
 namespace PoseidoneDataCleaner
 {
     public partial class frmMenu : Form
     {
-
         ListView checkedList;
         List<Classes.Templates.MeasureAndId> checkeditems = new List<Classes.Templates.MeasureAndId>();
         List<Classes.Templates.MeasureAndId> items;
         List<Classes.StatisticsTools.SampleStatistic> settingsOveritems = new List<Classes.StatisticsTools.SampleStatistic>();
         string station = "";
         string measureName = "";
-        bool changes = false;
         List<Classes.Templates.Sample>[] samples;
         Thread t;
+        DirectoryInfo dInfo;
+
+        int lenghtProgressBar = 0;
+        int ValueProgressBar = 0;
+        bool generatefile = false;
+        bool generationEnd = false;
+        string labelText = "";
 
         public frmMenu(ListView dataSelected, List<Classes.Templates.MeasureAndId> items)
         {
             InitializeComponent();
 
+            lblProgress.Hide();
+            pbGeneratingFile.Hide();
             //Data to consider
             this.checkedList = dataSelected;
             this.items = items;
 
             if (listMeasures.SelectedItems.Count <= 0)
             {
-               
+
             }
             for (int i = 0; i < dataSelected.CheckedItems.Count; i++)
             {
@@ -47,7 +57,7 @@ namespace PoseidoneDataCleaner
                 Classes.Templates.MeasureAndId checkeditem = new Classes.Templates.MeasureAndId();
 
                 checkeditem.stationName = (dataSelected.CheckedItems[i].Text);
-                checkeditem.name  = (dataSelected.CheckedItems[i].SubItems[1].Text);
+                checkeditem.name = (dataSelected.CheckedItems[i].SubItems[1].Text);
 
                 checkeditem.id = items.Find(x => x.stationName == checkeditem.stationName && x.name == checkeditem.name).id;
 
@@ -60,6 +70,8 @@ namespace PoseidoneDataCleaner
 
         }
 
+
+        #region EVENTS
         private void listMeasures_SelectedIndexChanged(object sender, EventArgs e)
         {
             decimal nudHiTresh = nudHigTreshold.Value;
@@ -135,64 +147,67 @@ namespace PoseidoneDataCleaner
                 }
             }
         }
-       
+
 
         private void btnBrowse_Click(object sender, EventArgs e)
         {
-           if (fbdPath.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbdPath.SelectedPath))
-           {
-                Program.FolderPath = fbdPath.SelectedPath;
-           }
-            
+            if (fbdPath.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(fbdPath.SelectedPath))
+            {
+                Program.FolderPath = fbdPath.SelectedPath + "\\dati";
+                System.IO.Directory.CreateDirectory(Program.FolderPath);
+
+                dInfo = new DirectoryInfo(Program.FolderPath);
+                DirectorySecurity dSecurity = dInfo.GetAccessControl();
+                dSecurity.AddAccessRule(new FileSystemAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), FileSystemRights.FullControl, InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit, PropagationFlags.None, AccessControlType.Allow));
+                dInfo.SetAccessControl(dSecurity);
+            }
+
         }
 
         private void btnBack_Click(object sender, EventArgs e)
         {
             t.Abort();
-            DialogResult = DialogResult.Cancel;
+            DialogResult = DialogResult.OK;
             this.Close();
         }
 
+        private void btnGenerateFile_Click(object sender, EventArgs e)
+        {
+            //GenerateFile();
+            Thread tGen = new Thread(new ThreadStart(GenerateFile));
+            tGen.Start();
+
+        }
+
+
+
+        #endregion
+
+
+
+        #region METHODS/FUNCTIONS
         private void GetSamples()
         {
             samples = new List<Classes.Templates.Sample>[checkeditems.Count];
             Classes.DbInteraction.MenervaDbComponent menervaDbComponent = new Classes.DbInteraction.MenervaDbComponent();
             Classes.DbInteraction.DbInteractor dbInteractor = new Classes.DbInteraction.DbInteractor(new OdbcConnection(Program.dsnconnection));
 
-            //List<Classes.>
-            for (int i= 0; i<this.checkeditems.Count; i++)
+
+            for (int i = 0; i < this.checkeditems.Count; i++)
             {
                 samples[i] = menervaDbComponent.GetSamples(new OdbcConnection(Program.dsnconnection), checkeditems.ElementAt(i).id, DateTime.Parse("2021-01-01"), DateTime.Parse("2022-01-01"), cbNotNull.Checked);
-                
-                for(int j=0; j < samples[i].Count; j++)
+
+                for (int j = 0; j < samples[i].Count; j++)
                 {
                     samples[i].ElementAt(j).stationName = checkeditems[i].stationName;
+                    samples[i].ElementAt(j).name = checkeditems[i].name;
                 }
             }
 
             MessageBox.Show("Samples correctly loaded", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            
+
         }
 
-        private void btnGenerateFile_Click(object sender, EventArgs e)
-        {
-            if (t.ThreadState == ThreadState.Stopped)
-            {
-                StreamWriter sw = new StreamWriter("C:\\Users\\Administrator\\Desktop\\CODING\\test.txt");
-                for (int i = 0; i < samples.Length; i++)
-                {
-                    for (int j = 0; j < samples[i].Count; j++)
-                    {
-                        sw.WriteLine(samples[i].ElementAt(j).stationName + "-" + samples[i].ElementAt(j).datetime + "-" + samples[i].ElementAt(j).value);
-                    }
-                }
-                sw.Close();
-            }
-            else
-            {
-                MessageBox.Show("Wait until samples are fully loaded", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
 
 
         public void SaveSettings(string measure, string station)
@@ -231,6 +246,110 @@ namespace PoseidoneDataCleaner
             }
         }
 
+        public void GenerateFile()
+        {
+            StreamWriter sw;
+            generatefile = true;
+            bool createDirectory = true;
+            DirectoryInfo Directorystation = dInfo;
+            string measName = "";
+            
 
+            if (Directory.Exists(dInfo.ToString()))
+            {
+                if (t.ThreadState == ThreadState.Stopped)
+                {
+                    //il folder path cambia ogni volta che cambia la stazione e che cambia la misura.
+                    for (int i = 0; i < samples.Length; i++)
+                    {
+                        lenghtProgressBar = samples[i].Count;
+
+                        for (int j = 0; j < samples[i].Count; j++)
+                        {
+                            if (createDirectory)
+                            {  
+                                System.IO.Directory.CreateDirectory(dInfo.ToString() + "\\" + samples[i].ElementAt(j).stationName);
+                                Directorystation = new DirectoryInfo(dInfo.ToString() + "\\" + samples[i].ElementAt(j).stationName);
+                                measName = "\\" + samples[i].ElementAt(j).name + ".txt";
+
+                                DirectorySecurity dsecStation = Directorystation.GetAccessControl();
+                                dsecStation.AddAccessRule(new FileSystemAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), FileSystemRights.FullControl, InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit, PropagationFlags.None, AccessControlType.Allow));
+                                Directorystation.SetAccessControl(dsecStation);
+                            }
+
+
+                            labelText = "Generating " + samples[i].ElementAt(j).stationName + "\\" + samples[i].ElementAt(j).name + ".txt";
+
+                            if (!System.IO.File.Exists(Directorystation.ToString() + measName))
+                            {
+                                sw = new StreamWriter(Directorystation.ToString() + measName);
+                            }
+                            else
+                            {
+                                createDirectory = false;
+                                sw = new StreamWriter(Directorystation.ToString() + measName, true);
+                            }
+
+                            sw.WriteLine(samples[i].ElementAt(j).stationName + "-" + samples[i].ElementAt(j).datetime + "-" + samples[i].ElementAt(j).value);
+
+                            sw.Close();
+
+                            ValueProgressBar = j + 1;
+                        }
+                        createDirectory = true;
+
+                    }
+
+                    generatefile = false;
+                    generationEnd = true;
+                }
+                else
+                {
+                    MessageBox.Show("Wait until samples are fully loaded", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+        }
+
+        #endregion
+
+        private void timerProgressBar_Tick(object sender, EventArgs e)
+        {
+            
+            if (generatefile)
+            {
+                if (pbGeneratingFile.Maximum == 0)
+                {
+                    pbGeneratingFile.Show();
+                    lblProgress.Text = labelText;
+                    lblProgress.Show();
+                    pbGeneratingFile.Maximum = lenghtProgressBar;
+                }
+                else
+                {
+                    pbGeneratingFile.Maximum = lenghtProgressBar;
+                    lblProgress.Text = labelText;
+                    pbGeneratingFile.Value = ValueProgressBar;
+                }
+            }
+            else
+            {
+                pbGeneratingFile.Value = 0;
+                pbGeneratingFile.Hide();
+                lblProgress.Hide();
+                if (generationEnd)
+                {
+                    MessageBox.Show("File correctly created.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                
+
+            }
+
+            
+
+            
+
+
+        
+        }
     }
 }

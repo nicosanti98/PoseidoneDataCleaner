@@ -57,7 +57,7 @@ namespace PoseidoneDataCleaner
             // btnDsnConnect
             // 
             this.btnDsnConnect.Location = new System.Drawing.Point(372, 36);
-            this.btnDsnConnect.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnDsnConnect.Margin = new System.Windows.Forms.Padding(2);
             this.btnDsnConnect.Name = "btnDsnConnect";
             this.btnDsnConnect.Size = new System.Drawing.Size(85, 19);
             this.btnDsnConnect.TabIndex = 5;
@@ -77,7 +77,7 @@ namespace PoseidoneDataCleaner
             // btnNext
             // 
             this.btnNext.Location = new System.Drawing.Point(206, 496);
-            this.btnNext.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnNext.Margin = new System.Windows.Forms.Padding(2);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(83, 30);
             this.btnNext.TabIndex = 8;
@@ -94,7 +94,7 @@ namespace PoseidoneDataCleaner
             this.checkedList.FullRowSelect = true;
             this.checkedList.HideSelection = false;
             this.checkedList.Location = new System.Drawing.Point(11, 118);
-            this.checkedList.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.checkedList.Margin = new System.Windows.Forms.Padding(2);
             this.checkedList.Name = "checkedList";
             this.checkedList.Size = new System.Drawing.Size(485, 362);
             this.checkedList.TabIndex = 9;
@@ -121,8 +121,10 @@ namespace PoseidoneDataCleaner
             this.Controls.Add(this.label2);
             this.Controls.Add(this.btnDsnConnect);
             this.Controls.Add(this.lbl1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
+            this.MaximizeBox = false;
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Data Normalizer";
             this.ResumeLayout(false);
             this.PerformLayout();

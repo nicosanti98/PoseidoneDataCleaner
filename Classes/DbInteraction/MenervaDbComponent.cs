@@ -39,7 +39,6 @@ namespace PoseidoneDataCleaner.Classes.DbInteraction
                 list.Add(item); 
             }
 
-
             return list ; 
         }
 

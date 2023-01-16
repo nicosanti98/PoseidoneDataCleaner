@@ -37,7 +37,7 @@ namespace PoseidoneDataCleaner
                 
                 this.Hide();
                 this.originForm.connection = this.connection;
-                this.originForm.label2.Text = "Connected to database: "+this.connection.Database;
+                this.originForm.label2.Text = "Connected to database: " + this.connection.Database;
                 this.connection.Close();
                 Classes.DbInteraction.MenervaDbComponent menervaDb = new Classes.DbInteraction.MenervaDbComponent();
                 List<Classes.Templates.MeasureAndId> idandnames = menervaDb.getMeasureIdAndNames(this.connection);

@@ -29,8 +29,10 @@ namespace PoseidoneDataCleaner
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.btnBack = new System.Windows.Forms.Button();
             this.cbNotNull = new System.Windows.Forms.CheckBox();
             this.btnBrowse = new System.Windows.Forms.Button();
             this.listMeasures = new System.Windows.Forms.ListView();
@@ -46,7 +48,9 @@ namespace PoseidoneDataCleaner
             this.nudLowTreshold = new System.Windows.Forms.NumericUpDown();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.fbdPath = new System.Windows.Forms.FolderBrowserDialog();
-            this.btnBack = new System.Windows.Forms.Button();
+            this.pbGeneratingFile = new System.Windows.Forms.ProgressBar();
+            this.timerProgressBar = new System.Windows.Forms.Timer(this.components);
+            this.lblProgress = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudSampleNum)).BeginInit();
@@ -67,6 +71,8 @@ namespace PoseidoneDataCleaner
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.lblProgress);
+            this.tabPage1.Controls.Add(this.pbGeneratingFile);
             this.tabPage1.Controls.Add(this.btnBack);
             this.tabPage1.Controls.Add(this.cbNotNull);
             this.tabPage1.Controls.Add(this.btnBrowse);
@@ -88,6 +94,16 @@ namespace PoseidoneDataCleaner
             this.tabPage1.Text = "Median Filter";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // btnBack
+            // 
+            this.btnBack.Location = new System.Drawing.Point(24, 5);
+            this.btnBack.Name = "btnBack";
+            this.btnBack.Size = new System.Drawing.Size(86, 28);
+            this.btnBack.TabIndex = 1;
+            this.btnBack.Text = "Back";
+            this.btnBack.UseVisualStyleBackColor = true;
+            this.btnBack.Click += new System.EventHandler(this.btnBack_Click);
+            // 
             // cbNotNull
             // 
             this.cbNotNull.AutoSize = true;
@@ -100,9 +116,9 @@ namespace PoseidoneDataCleaner
             // 
             // btnBrowse
             // 
-            this.btnBrowse.Location = new System.Drawing.Point(22, 542);
+            this.btnBrowse.Location = new System.Drawing.Point(24, 527);
             this.btnBrowse.Name = "btnBrowse";
-            this.btnBrowse.Size = new System.Drawing.Size(75, 23);
+            this.btnBrowse.Size = new System.Drawing.Size(86, 28);
             this.btnBrowse.TabIndex = 1;
             this.btnBrowse.Text = "Browse...";
             this.btnBrowse.UseVisualStyleBackColor = false;
@@ -136,7 +152,7 @@ namespace PoseidoneDataCleaner
             // 
             // btnGenerateFile
             // 
-            this.btnGenerateFile.Location = new System.Drawing.Point(477, 527);
+            this.btnGenerateFile.Location = new System.Drawing.Point(461, 527);
             this.btnGenerateFile.Margin = new System.Windows.Forms.Padding(2);
             this.btnGenerateFile.Name = "btnGenerateFile";
             this.btnGenerateFile.Size = new System.Drawing.Size(86, 28);
@@ -247,20 +263,34 @@ namespace PoseidoneDataCleaner
             this.tabPage2.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(2);
-            this.tabPage2.Size = new System.Drawing.Size(582, 615);
+            this.tabPage2.Size = new System.Drawing.Size(581, 612);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // btnBack
+            // pbGeneratingFile
             // 
-            this.btnBack.Location = new System.Drawing.Point(3, 5);
-            this.btnBack.Name = "btnBack";
-            this.btnBack.Size = new System.Drawing.Size(51, 25);
-            this.btnBack.TabIndex = 1;
-            this.btnBack.Text = "Back";
-            this.btnBack.UseVisualStyleBackColor = true;
-            this.btnBack.Click += new System.EventHandler(this.btnBack_Click);
+            this.pbGeneratingFile.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.pbGeneratingFile.Location = new System.Drawing.Point(192, 584);
+            this.pbGeneratingFile.Maximum = 0;
+            this.pbGeneratingFile.Name = "pbGeneratingFile";
+            this.pbGeneratingFile.Size = new System.Drawing.Size(185, 23);
+            this.pbGeneratingFile.TabIndex = 11;
+            // 
+            // timerProgressBar
+            // 
+            this.timerProgressBar.Enabled = true;
+            this.timerProgressBar.Interval = 1;
+            this.timerProgressBar.Tick += new System.EventHandler(this.timerProgressBar_Tick);
+            // 
+            // lblProgress
+            // 
+            this.lblProgress.AutoSize = true;
+            this.lblProgress.Location = new System.Drawing.Point(189, 568);
+            this.lblProgress.Name = "lblProgress";
+            this.lblProgress.Size = new System.Drawing.Size(35, 13);
+            this.lblProgress.TabIndex = 12;
+            this.lblProgress.Text = "TEXT";
             // 
             // frmMenu
             // 
@@ -269,7 +299,9 @@ namespace PoseidoneDataCleaner
             this.ClientSize = new System.Drawing.Size(592, 647);
             this.Controls.Add(this.tabControl1);
             this.Margin = new System.Windows.Forms.Padding(2);
+            this.MaximizeBox = false;
             this.Name = "frmMenu";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Menu";
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -301,5 +333,8 @@ namespace PoseidoneDataCleaner
         private System.Windows.Forms.FolderBrowserDialog fbdPath;
         private System.Windows.Forms.CheckBox cbNotNull;
         private System.Windows.Forms.Button btnBack;
+        private System.Windows.Forms.ProgressBar pbGeneratingFile;
+        private System.Windows.Forms.Timer timerProgressBar;
+        private System.Windows.Forms.Label lblProgress;
     }
 }
