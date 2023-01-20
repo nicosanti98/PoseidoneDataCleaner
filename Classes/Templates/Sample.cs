@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PoseidoneDataCleaner.Classes.Templates
 {
-    internal class Sample : Classes.Interfaces.Sample
+    public class Sample : Classes.Interfaces.Sample
     {
         public string name { get; set; }
         public int id { get; set; }

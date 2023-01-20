@@ -32,6 +32,8 @@ namespace PoseidoneDataCleaner
             this.components = new System.ComponentModel.Container();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.lblProgress = new System.Windows.Forms.Label();
+            this.pbGeneratingFile = new System.Windows.Forms.ProgressBar();
             this.btnBack = new System.Windows.Forms.Button();
             this.cbNotNull = new System.Windows.Forms.CheckBox();
             this.btnBrowse = new System.Windows.Forms.Button();
@@ -48,14 +50,15 @@ namespace PoseidoneDataCleaner
             this.nudLowTreshold = new System.Windows.Forms.NumericUpDown();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.fbdPath = new System.Windows.Forms.FolderBrowserDialog();
-            this.pbGeneratingFile = new System.Windows.Forms.ProgressBar();
             this.timerProgressBar = new System.Windows.Forms.Timer(this.components);
-            this.lblProgress = new System.Windows.Forms.Label();
+            this.nudMedianFilterRepetions = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudSampleNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudHigTreshold)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudLowTreshold)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudMedianFilterRepetions)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -71,6 +74,8 @@ namespace PoseidoneDataCleaner
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label4);
+            this.tabPage1.Controls.Add(this.nudMedianFilterRepetions);
             this.tabPage1.Controls.Add(this.lblProgress);
             this.tabPage1.Controls.Add(this.pbGeneratingFile);
             this.tabPage1.Controls.Add(this.btnBack);
@@ -94,9 +99,27 @@ namespace PoseidoneDataCleaner
             this.tabPage1.Text = "Median Filter";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // lblProgress
+            // 
+            this.lblProgress.AutoSize = true;
+            this.lblProgress.Location = new System.Drawing.Point(189, 568);
+            this.lblProgress.Name = "lblProgress";
+            this.lblProgress.Size = new System.Drawing.Size(35, 13);
+            this.lblProgress.TabIndex = 12;
+            this.lblProgress.Text = "TEXT";
+            // 
+            // pbGeneratingFile
+            // 
+            this.pbGeneratingFile.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.pbGeneratingFile.Location = new System.Drawing.Point(192, 584);
+            this.pbGeneratingFile.Maximum = 0;
+            this.pbGeneratingFile.Name = "pbGeneratingFile";
+            this.pbGeneratingFile.Size = new System.Drawing.Size(185, 23);
+            this.pbGeneratingFile.TabIndex = 11;
+            // 
             // btnBack
             // 
-            this.btnBack.Location = new System.Drawing.Point(24, 5);
+            this.btnBack.Location = new System.Drawing.Point(6, 5);
             this.btnBack.Name = "btnBack";
             this.btnBack.Size = new System.Drawing.Size(86, 28);
             this.btnBack.TabIndex = 1;
@@ -166,7 +189,7 @@ namespace PoseidoneDataCleaner
             this.lblMeasure.AutoSize = true;
             this.lblMeasure.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMeasure.ForeColor = System.Drawing.Color.Green;
-            this.lblMeasure.Location = new System.Drawing.Point(106, 21);
+            this.lblMeasure.Location = new System.Drawing.Point(106, 39);
             this.lblMeasure.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblMeasure.Name = "lblMeasure";
             this.lblMeasure.Size = new System.Drawing.Size(0, 20);
@@ -268,29 +291,43 @@ namespace PoseidoneDataCleaner
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // pbGeneratingFile
-            // 
-            this.pbGeneratingFile.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.pbGeneratingFile.Location = new System.Drawing.Point(192, 584);
-            this.pbGeneratingFile.Maximum = 0;
-            this.pbGeneratingFile.Name = "pbGeneratingFile";
-            this.pbGeneratingFile.Size = new System.Drawing.Size(185, 23);
-            this.pbGeneratingFile.TabIndex = 11;
-            // 
             // timerProgressBar
             // 
             this.timerProgressBar.Enabled = true;
             this.timerProgressBar.Interval = 1;
             this.timerProgressBar.Tick += new System.EventHandler(this.timerProgressBar_Tick);
             // 
-            // lblProgress
+            // nudMedianFilterRepetions
             // 
-            this.lblProgress.AutoSize = true;
-            this.lblProgress.Location = new System.Drawing.Point(189, 568);
-            this.lblProgress.Name = "lblProgress";
-            this.lblProgress.Size = new System.Drawing.Size(35, 13);
-            this.lblProgress.TabIndex = 12;
-            this.lblProgress.Text = "TEXT";
+            this.nudMedianFilterRepetions.Location = new System.Drawing.Point(192, 205);
+            this.nudMedianFilterRepetions.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.nudMedianFilterRepetions.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudMedianFilterRepetions.Name = "nudMedianFilterRepetions";
+            this.nudMedianFilterRepetions.Size = new System.Drawing.Size(101, 20);
+            this.nudMedianFilterRepetions.TabIndex = 13;
+            this.nudMedianFilterRepetions.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(24, 207);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(126, 13);
+            this.label4.TabIndex = 14;
+            this.label4.Text = "Filter applications number";
             // 
             // frmMenu
             // 
@@ -309,6 +346,7 @@ namespace PoseidoneDataCleaner
             ((System.ComponentModel.ISupportInitialize)(this.nudSampleNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudHigTreshold)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudLowTreshold)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudMedianFilterRepetions)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -336,5 +374,7 @@ namespace PoseidoneDataCleaner
         private System.Windows.Forms.ProgressBar pbGeneratingFile;
         private System.Windows.Forms.Timer timerProgressBar;
         private System.Windows.Forms.Label lblProgress;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown nudMedianFilterRepetions;
     }
 }

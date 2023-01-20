@@ -13,7 +13,7 @@ namespace PoseidoneDataCleaner.Classes.StatisticsTools
 
         public float lowTreshold { get; set; }
         public float highTreshold { get; set; }
-
+        public int medianFilterRepetitions { get; set; }
         public int SamplesRange { get; set; }
 
     }
