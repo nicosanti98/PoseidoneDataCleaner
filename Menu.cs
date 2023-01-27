@@ -33,6 +33,7 @@ namespace PoseidoneDataCleaner
         string measureName = "";
 
         List<Classes.Templates.Sample>[] samples;
+        List<List<Classes.Templates.Sample>> originalValules = new List<List<Classes.Templates.Sample>>();
 
         DirectoryInfo dInfo;
         bool threadLoading = false;
@@ -103,6 +104,13 @@ namespace PoseidoneDataCleaner
 
             MessageBox.Show("Samples correctly loaded", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+            var chart = crtData.ChartAreas[0];
+            chart.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Auto;
+            chart.AxisY.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+
+
+            
+
         }
 
 
@@ -114,8 +122,10 @@ namespace PoseidoneDataCleaner
             decimal nudSample = nudSampleNum.Value;
             decimal nudRepetions = nudMedianFilterRepetions.Value;
 
-            string[] subs = { " - " };
+        
 
+            string[] subs = { " - " };
+            crtData.Titles.Clear();
             if (lblMeasure.Text != "")
             {
                 station = lblMeasure.Text.Split(subs, StringSplitOptions.None)[0];
@@ -131,6 +141,38 @@ namespace PoseidoneDataCleaner
                 nudSampleNum.Value = 3;
                 nudMedianFilterRepetions.Value = 1;
 
+                //Fill graph
+                int index = 0;
+                foreach(List<Classes.Templates.Sample> sampless in samples)
+                {
+
+                    if ((sampless.Count <= 0) || (sampless.ElementAt(0).stationName == listMeasures.SelectedItems[0].SubItems[0].Text && sampless.ElementAt(0).name == listMeasures.SelectedItems[0].SubItems[1].Text))
+                    {
+
+
+                    }
+                    else
+                    {
+                        index++;
+                    }
+
+
+                }
+
+                    var selectedObject = samples[index];
+
+                //crtData.Titles.Add(selectedObject[0].stationName + " - " + selectedObject[0].name);
+                //for (int i = 0; i < crtData.Series[0].Points.Count; i++)
+                //{
+                //    crtData.Series[0].Points.RemoveAt(i);
+                //}
+                //for (int i = 0; i < selectedObject.Count; i++)
+                //{
+                //    crtData.Series[0].Points.AddY(selectedObject[i].value);
+
+                //}
+
+
 
                 lblMeasure.Text = listMeasures.SelectedItems[0].SubItems[0].Text + " - " + listMeasures.SelectedItems[0].SubItems[1].Text;
                 if (settingsOveritems.Exists(x => x.sample.stationName == listMeasures.SelectedItems[0].SubItems[0].Text && x.sample.name == listMeasures.SelectedItems[0].SubItems[1].Text))
@@ -141,6 +183,9 @@ namespace PoseidoneDataCleaner
                     nudLowTreshold.Value = decimal.Parse(item.lowTreshold.ToString());
                     nudSampleNum.Value = decimal.Parse(item.SamplesRange.ToString());
                     nudMedianFilterRepetions.Value = decimal.Parse(item.medianFilterRepetitions.ToString());
+
+                    
+
                 }
             }
             else
@@ -232,34 +277,123 @@ namespace PoseidoneDataCleaner
                 DirectoryInfo Directorystation = dInfo;
 
                 List<Thread> threads = new List<Thread>();
-                Classes.StatisticsTools.Filter f = new Classes.StatisticsTools.Filter();
-                List<Classes.Templates.Sample>[] median = f.MedianFilter(settingsOveritems, samples, (int)nudMedianFilterRepetions.Value);
-                samples = median;
+
+               
+
+                
+                
+               
                 string path = "";
 
-                int i = 0; 
-                foreach (List<Classes.Templates.Sample> sample in samples)
+            
+
+                int j = 0;
+                foreach (List<Classes.Templates.Sample> sample in originalValules)
                 {
                     if (sample.Count > 0)
                     {
-                        System.IO.Directory.CreateDirectory(dInfo.ToString() + "\\" + sample.ElementAt(0).stationName);
-                        Directorystation = new DirectoryInfo(dInfo.ToString() + "\\" + sample.ElementAt(0).stationName);
-                        DirectorySecurity dsecStation = Directorystation.GetAccessControl();
-                        dsecStation.AddAccessRule(new FileSystemAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), FileSystemRights.FullControl, InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit, PropagationFlags.None, AccessControlType.Allow));
-                        Directorystation.SetAccessControl(dsecStation);
+                        if (!(System.IO.Directory.Exists(dInfo.ToString() + "\\" + "Original Data" + "\\" + sample.ElementAt(j).stationName)))
+                        {
+                            System.IO.Directory.CreateDirectory(dInfo.ToString() + "\\" + "Original Data" + "\\" + sample.ElementAt(j).stationName);
+                            Directorystation = new DirectoryInfo(dInfo.ToString() + "\\" + "Original Data" + "\\" + sample.ElementAt(j).stationName);
+                            DirectorySecurity dsecStation = Directorystation.GetAccessControl();
+                            dsecStation.AddAccessRule(new FileSystemAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), FileSystemRights.FullControl, InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit, PropagationFlags.None, AccessControlType.Allow));
+                            Directorystation.SetAccessControl(dsecStation);
 
+
+
+                            //new Thread (new ParameterizedThreadStart(myMethod));
+                            try
+                            {
+                                path = dInfo.ToString() + "\\" + "Original Data" + "\\" + sample.ElementAt(0).stationName + "\\" + sample.ElementAt(0).name + ".txt";
+                                WriteOnFile(path, sample);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(path + ex.StackTrace);
+                            }
+                        }
+                        else
+                        {
+                            System.IO.Directory.Delete(dInfo.ToString() + "\\" + "Original Data" + "\\" + sample.ElementAt(j).stationName, true);
+                            System.IO.Directory.CreateDirectory(dInfo.ToString() + "\\" + "Original Data" + "\\" + sample.ElementAt(j).stationName);
+                            Directorystation = new DirectoryInfo(dInfo.ToString() + "\\" + "Original Data" + "\\" + sample.ElementAt(j).stationName);
+                            DirectorySecurity dsecStation = Directorystation.GetAccessControl();
+                            dsecStation.AddAccessRule(new FileSystemAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), FileSystemRights.FullControl, InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit, PropagationFlags.None, AccessControlType.Allow));
+                            Directorystation.SetAccessControl(dsecStation);
+
+
+
+                            //new Thread (new ParameterizedThreadStart(myMethod));
+                            try
+                            {
+                                path = dInfo.ToString() + "\\"+"Original Data"+"\\" + sample.ElementAt(0).stationName + "\\[ORIGINAL]" + sample.ElementAt(0).name + ".txt";
+                                WriteOnFile(path, sample);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(path + ex.StackTrace);
+                            }
+
+                        }
+
+                    }
+                    j++;
+                }
+                Classes.StatisticsTools.Filter f = new Classes.StatisticsTools.Filter();
+                List<Classes.Templates.Sample>[] median = f.MedianFilter(settingsOveritems, samples, (int)nudMedianFilterRepetions.Value);
+                samples = median;
+                int i = 0; 
+                foreach (List<Classes.Templates.Sample> sample1 in samples)
+                {
+                    if (sample1.Count > 0)
+                    {
+                        if (!(System.IO.Directory.Exists(dInfo.ToString() + "\\" +sample1.ElementAt(0).stationName)))
+                        {
+                            System.IO.Directory.CreateDirectory(dInfo.ToString() + "\\" + sample1.ElementAt(0).stationName);
+                            Directorystation = new DirectoryInfo(dInfo.ToString() + "\\" + sample1.ElementAt(0).stationName);
+                            DirectorySecurity dsecStation = Directorystation.GetAccessControl();
+                            dsecStation.AddAccessRule(new FileSystemAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), FileSystemRights.FullControl, InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit, PropagationFlags.None, AccessControlType.Allow));
+                            Directorystation.SetAccessControl(dsecStation);
+
+
+
+                            //new Thread (new ParameterizedThreadStart(myMethod));
+                            try
+                            {
+                                var path1 = dInfo.ToString() + "\\" + sample1.ElementAt(0).stationName + "\\" + sample1.ElementAt(0).name + ".txt";
+                                WriteOnFile(path1, sample1);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(path + ex.StackTrace);
+                            }
+                        }
+                        else
+                        {
+                         
+                            System.IO.Directory.Delete(dInfo.ToString() + "\\" + sample1.ElementAt(0).stationName, true);
+                            System.IO.Directory.CreateDirectory(dInfo.ToString() + "\\" + sample1.ElementAt(0).stationName);
+                            Directorystation = new DirectoryInfo(dInfo.ToString() + "\\" + sample1.ElementAt(0).stationName);
+                            DirectorySecurity dsecStation = Directorystation.GetAccessControl();
+                            dsecStation.AddAccessRule(new FileSystemAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), FileSystemRights.FullControl, InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit, PropagationFlags.None, AccessControlType.Allow));
+                            Directorystation.SetAccessControl(dsecStation);
+
+
+
+                            //new Thread (new ParameterizedThreadStart(myMethod));
+                            try
+                            {
+                                var path1 = dInfo.ToString() + "\\" + sample1.ElementAt(0).stationName + "\\" + sample1.ElementAt(0).name + ".txt";
+                                WriteOnFile(path1, sample1);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(path + ex.StackTrace);
+                            }
+
+                        }
                         
-
-                        //new Thread (new ParameterizedThreadStart(myMethod));
-                        try
-                        {
-                            path = dInfo.ToString() + "\\" + median[0].ElementAt(0).stationName + "\\" + median[0].ElementAt(0).name + ".txt";
-                            threads.Add(new Thread(() => WriteOnFile(path, sample)));
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(path + ex.StackTrace);
-                        }
                     }
                     i++;
                 }
@@ -295,7 +429,8 @@ namespace PoseidoneDataCleaner
                 listofSamples.ElementAt(j).stationName = measure.stationName;
                 listofSamples.ElementAt(j).name = measure.name;
             }
-            samples = samples.Append(listofSamples).ToArray(); 
+            samples = samples.Append(listofSamples).ToArray();
+            originalValules.Add(listofSamples);
 
         }
 

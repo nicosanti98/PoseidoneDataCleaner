@@ -37,7 +37,8 @@ namespace PoseidoneDataCleaner.Classes.StatisticsTools
                     newList[j] = new List<Templates.Sample>();
                     List<Classes.Templates.Sample> zeros = new List<Templates.Sample>();
                     zeros = addZerosToList(originalSamples[j], WindowSize);
-                    for (int z = WindowSize; z < (zeros.Count - WindowSize - 1) ; z++)
+                    int w = 0;
+                    for (int z = WindowSize; z < (zeros.Count - WindowSize) ; z++)
                     {
                         // oggetto attuale[z] - Classes.Templates.Sample newItem;
                         
@@ -47,9 +48,10 @@ namespace PoseidoneDataCleaner.Classes.StatisticsTools
                         Window = Window.OrderBy(x => x.value).ToList();
 
                         newItem = Window.ElementAt((int)(Window.Count / 2));
-                        samples[j].ElementAt(z-1).value = newItem.value;
+                        originalSamples[j].ElementAt(w).value = newItem.value;
 
-                        newList[j].Add(samples[j].ElementAt(z - 1));
+                        newList[j].Add(originalSamples[j].ElementAt(w));
+                        w++;
                     }                        
 
                     //var sboccodesangue = newArr.ToList<List<Classes.Templates.Sample>>();
