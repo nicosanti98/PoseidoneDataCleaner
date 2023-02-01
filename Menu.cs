@@ -17,6 +17,7 @@ using System.Security.Principal;
 using PoseidoneDataCleaner.Classes.Interfaces;
 using PoseidoneDataCleaner.Classes.Templates;
 using System.Reflection;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace PoseidoneDataCleaner
 {
@@ -37,8 +38,7 @@ namespace PoseidoneDataCleaner
 
         DirectoryInfo dInfo;
         bool threadLoading = false;
-        bool messageshown = false;
-
+        
         int lenghtProgressBar = 0;
         int ValueProgressBar = 0;
         bool generatefile = false;
@@ -88,8 +88,6 @@ namespace PoseidoneDataCleaner
                 MeasureAndId sboccodesangue = checkeditems.ElementAt(z);
                 z++;
                 threads.Add(new Thread(() => GetSamples(menervaDbComponent, sboccodesangue)));
-                
-
             }
           
             foreach(Thread t in threads)
@@ -107,9 +105,6 @@ namespace PoseidoneDataCleaner
             var chart = crtData.ChartAreas[0];
             chart.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Auto;
             chart.AxisY.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
-
-
-            
 
         }
 
@@ -145,11 +140,12 @@ namespace PoseidoneDataCleaner
                 int index = 0;
                 foreach(List<Classes.Templates.Sample> sampless in samples)
                 {
-
+                    //non va mai su "else".
+                    //nuovo chart? LIBRERIA SCOTTPLOTT. https://scottplot.net/
                     if ((sampless.Count <= 0) || (sampless.ElementAt(0).stationName == listMeasures.SelectedItems[0].SubItems[0].Text && sampless.ElementAt(0).name == listMeasures.SelectedItems[0].SubItems[1].Text))
                     {
-
-
+                        
+                        
                     }
                     else
                     {
@@ -159,20 +155,17 @@ namespace PoseidoneDataCleaner
 
                 }
 
-                    var selectedObject = samples[index];
-
-                //crtData.Titles.Add(selectedObject[0].stationName + " - " + selectedObject[0].name);
-                //for (int i = 0; i < crtData.Series[0].Points.Count; i++)
-                //{
-                //    crtData.Series[0].Points.RemoveAt(i);
-                //}
-                //for (int i = 0; i < selectedObject.Count; i++)
-                //{
-                //    crtData.Series[0].Points.AddY(selectedObject[i].value);
-
-                //}
-
-
+                var selectedObject = samples[index];
+                
+                crtData.Titles.Add(selectedObject[0].stationName + " - " + selectedObject[0].name);
+                for (int i = 0; i < crtData.Series[0].Points.Count; i++)
+                {
+                    crtData.Series[0].Points.RemoveAt(i);
+                }
+                for (int i = 0; i < selectedObject.Count; i++)
+                {
+                    crtData.Series[0].Points.AddY(selectedObject[i].value);
+                }
 
                 lblMeasure.Text = listMeasures.SelectedItems[0].SubItems[0].Text + " - " + listMeasures.SelectedItems[0].SubItems[1].Text;
                 if (settingsOveritems.Exists(x => x.sample.stationName == listMeasures.SelectedItems[0].SubItems[0].Text && x.sample.name == listMeasures.SelectedItems[0].SubItems[1].Text))
@@ -183,9 +176,6 @@ namespace PoseidoneDataCleaner
                     nudLowTreshold.Value = decimal.Parse(item.lowTreshold.ToString());
                     nudSampleNum.Value = decimal.Parse(item.SamplesRange.ToString());
                     nudMedianFilterRepetions.Value = decimal.Parse(item.medianFilterRepetitions.ToString());
-
-                    
-
                 }
             }
             else
@@ -198,7 +188,7 @@ namespace PoseidoneDataCleaner
 
                     if ((nudHigTreshold.Value == (decimal)item.highTreshold) && (nudLowTreshold.Value == (decimal)item.lowTreshold) && (nudSampleNum.Value == (decimal)item.SamplesRange) && (nudMedianFilterRepetions.Value == (decimal)item.medianFilterRepetitions))
                     {
-                        //noop;
+                        //n oop;
                     }
                     else
                     {
@@ -230,6 +220,7 @@ namespace PoseidoneDataCleaner
                 }
             }
         }
+
 
 
         private void btnBrowse_Click(object sender, EventArgs e)
@@ -278,14 +269,9 @@ namespace PoseidoneDataCleaner
 
                 List<Thread> threads = new List<Thread>();
 
-               
-
-                
-                
-               
+              
                 string path = "";
-
-            
+           
 
                 int j = 0;
                 foreach (List<Classes.Templates.Sample> sample in originalValules)
@@ -414,8 +400,34 @@ namespace PoseidoneDataCleaner
 
         }
 
-        #endregion
+        private void timerProgressBar_Tick(object sender, EventArgs e)
+        {
 
+            if (generatefile)
+            {
+
+                pbGeneratingFile.Show();
+                lblProgress.Text = labelText;
+                lblProgress.Show();
+                pbGeneratingFile.Maximum = lenghtProgressBar;
+
+                lblProgress.Text = labelText;
+                pbGeneratingFile.Value = ValueProgressBar;
+            }
+            else
+            {
+
+                //pbGeneratingFile.Hide();
+                //lblProgress.Hide();
+                if (generationEnd)
+                {
+                    generationEnd = false;
+                    MessageBox.Show("File correctly created.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+
+        #endregion
 
 
         #region METHODS/FUNCTIONS
@@ -433,8 +445,6 @@ namespace PoseidoneDataCleaner
             originalValules.Add(listofSamples);
 
         }
-
-
 
         public void SaveSettings(string measure, string station)
         {
@@ -473,42 +483,11 @@ namespace PoseidoneDataCleaner
                 MessageBox.Show("Values have been saved", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
-
-
-        #endregion
-
-        private void timerProgressBar_Tick(object sender, EventArgs e)
-        {
-
-            if (generatefile)
-            {
-
-                pbGeneratingFile.Show();
-                lblProgress.Text = labelText;
-                lblProgress.Show();
-                pbGeneratingFile.Maximum = lenghtProgressBar;
-
-                lblProgress.Text = labelText;
-                pbGeneratingFile.Value = ValueProgressBar;
-            }
-            else
-            {
-
-                //pbGeneratingFile.Hide();
-                //lblProgress.Hide();
-                if (generationEnd)
-                {
-                    generationEnd = false;
-                    MessageBox.Show("File correctly created.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
-        }
-
         public void WriteOnFile(string path, List<Classes.Templates.Sample> samples)
         {
             StreamWriter sw = new StreamWriter(path, true);
             sw.WriteLine(samples.ElementAt(0).stationName);
-            sw.WriteLine(samples.ElementAt(0).name + ";") ;
+            sw.WriteLine(samples.ElementAt(0).name + ";");
             for (int i = 0; i < samples.Count; i++)
             {
                 sw.WriteLine(samples.ElementAt(i).datetime.ToString("G") + ";\t" + samples.ElementAt(i).value);
@@ -517,8 +496,8 @@ namespace PoseidoneDataCleaner
             ValueProgressBar++;
         }
 
+        #endregion
 
-
-
+ 
     }
 }

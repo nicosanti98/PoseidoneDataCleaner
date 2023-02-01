@@ -20,7 +20,6 @@ namespace PoseidoneDataCleaner.Classes.StatisticsTools
         public List<Classes.Templates.Sample>[] MedianFilter(List<StatisticsTools.SampleStatistic> settings, List<Classes.Templates.Sample>[] samples, int number)
         {
             SampleStatistic sampleStatistic = new SampleStatistic();
-            double[] value;
             int WindowSize = 0;
             List<Classes.Templates.Sample>[] originalSamples = samples;
             List<Classes.Templates.Sample>[] newList = new List<Templates.Sample>[samples.Length];
@@ -54,10 +53,8 @@ namespace PoseidoneDataCleaner.Classes.StatisticsTools
                         w++;
                     }                        
 
-                    //var sboccodesangue = newArr.ToList<List<Classes.Templates.Sample>>();
                     originalSamples[j] = newList[j];
-                    //sboccodesangue.Add(newList[j]);
-                    //newArr = sboccodesangue.ToArray();
+
                 }
                 
             }
