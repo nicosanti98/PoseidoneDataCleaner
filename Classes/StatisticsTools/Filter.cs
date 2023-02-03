@@ -17,43 +17,68 @@ namespace PoseidoneDataCleaner.Classes.StatisticsTools
              
         }
 
-        public List<Classes.Templates.Sample>[] MedianFilter(List<StatisticsTools.SampleStatistic> settings, List<Classes.Templates.Sample>[] samples, int number)
+        public List<List<Classes.Templates.Sample>> MedianFilter(List<StatisticsTools.SampleStatistic> settings, List<List<Classes.Templates.Sample>> samples, int number)
         {
             SampleStatistic sampleStatistic = new SampleStatistic();
             int WindowSize = 0;
-            List<Classes.Templates.Sample>[] originalSamples = samples;
-            List<Classes.Templates.Sample>[] newList = new List<Templates.Sample>[samples.Length];
-            List<Classes.Templates.Sample>[] newArr = new List<Templates.Sample>[0];
-            newList.Initialize();
-            newArr.Initialize();
+
+            List<List<Classes.Templates.Sample>> originalSamples = samples;
+            List<List<Classes.Templates.Sample>> newList = new List<List<Templates.Sample>>();
+            List<List<Classes.Templates.Sample>> newArr = new List<List<Templates.Sample>>();
+
+            
             for (int i = 0; i < number; i++)
             {
-                for(int j = 0; j < originalSamples.Length; j++)
+                for(int j = 0; j < originalSamples.Count; j++)
                 {
-                    sampleStatistic = GetSettingsById(samples[j].ElementAt(0), settings);
-                    //value = new double[sampleStatistic.SamplesRange];
-                    WindowSize = sampleStatistic.SamplesRange;
-                    newList[j] = new List<Templates.Sample>();
-                    List<Classes.Templates.Sample> zeros = new List<Templates.Sample>();
-                    zeros = addZerosToList(originalSamples[j], WindowSize);
-                    int w = 0;
-                    for (int z = WindowSize; z < (zeros.Count - WindowSize) ; z++)
+                    if(originalSamples[j].Count > 0)
                     {
-                        // oggetto attuale[z] - Classes.Templates.Sample newItem;
+                        float HighTreshold = settings.ElementAt(0).highTreshold;
+                        float LowTreshold = settings.ElementAt(0).lowTreshold;
+                        sampleStatistic = GetSettingsById(samples[j].ElementAt(0), settings);
+                        //value = new double[sampleStatistic.SamplesRange];
+                        WindowSize = sampleStatistic.SamplesRange;
                         
-                        Classes.Templates.Sample newItem;
+                        List<Classes.Templates.Sample> zeros = new List<Templates.Sample>();
 
-                        var Window = zeros.GetRange(z - (int)(WindowSize /2), WindowSize);
-                        Window = Window.OrderBy(x => x.value).ToList();
+                        //Lead all values inside the interval defined by tresholds
+                        //for(int z = 0; z < originalSamples[j].Count; z++)
+                        //{
+                        //    if(originalSamples[j][z].value < LowTreshold)
+                        //    {
+                        //        originalSamples[j][z].value = LowTreshold;
+                        //    }
 
-                        newItem = Window.ElementAt((int)(Window.Count / 2));
-                        originalSamples[j].ElementAt(w).value = newItem.value;
+                        //    if (originalSamples[j][z].value > HighTreshold)
+                        //    {
+                        //        originalSamples[j][z].value = HighTreshold;
+                        //    }
 
-                        newList[j].Add(originalSamples[j].ElementAt(w));
-                        w++;
-                    }                        
+                        //}
+                        zeros = addZerosToList(originalSamples[j], WindowSize);
+                        int w = 0;
 
-                    originalSamples[j] = newList[j];
+                        for (int z = WindowSize; z < (zeros.Count - WindowSize); z++)
+                        {
+                            
+                            // oggetto attuale[z] - Classes.Templates.Sample newItem;
+
+                            Classes.Templates.Sample newItem;
+
+                            var Window = zeros.GetRange(z - (int)(WindowSize / 2), WindowSize);
+                            Window = Window.OrderBy(x => x.value).ToList();
+
+                            newItem = Window.ElementAt((int)(Window.Count / 2));
+                            originalSamples[j].ElementAt(w).value = newItem.value;
+
+                            newList.Add(originalSamples[j]);
+                            w++;
+                        }
+
+                        originalSamples[j] = newList[j];
+
+                    }
+                    
 
                 }
                 

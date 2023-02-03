@@ -1,23 +1,13 @@
-﻿using System;
+﻿using PoseidoneDataCleaner.Classes.Templates;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+using System.Data.Odbc;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Xml.Linq;
-using System.Threading;
-using System.Data.Odbc;
-using static System.Net.WebRequestMethods;
 using System.Security.AccessControl;
 using System.Security.Principal;
-using PoseidoneDataCleaner.Classes.Interfaces;
-using PoseidoneDataCleaner.Classes.Templates;
-using System.Reflection;
-using System.Windows.Forms.DataVisualization.Charting;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace PoseidoneDataCleaner
 {
@@ -33,9 +23,9 @@ namespace PoseidoneDataCleaner
         string station = "";
         string measureName = "";
 
-        List<Classes.Templates.Sample>[] samples;
+        List<List<Classes.Templates.Sample>> samples = new List<List<Sample>>();
         List<List<Classes.Templates.Sample>> originalValules = new List<List<Classes.Templates.Sample>>();
-
+        List<List<Classes.Templates.Sample>> subSamples = new List<List<Sample>>();
         DirectoryInfo dInfo;
         bool threadLoading = false;
         
@@ -68,6 +58,8 @@ namespace PoseidoneDataCleaner
             {
                 this.listMeasures.Items.Add(dataSelected.CheckedItems[i].Text);
                 this.listMeasures.Items[i].SubItems.Add(dataSelected.CheckedItems[i].SubItems[1]);
+                this.listMeasurestab2.Items.Add(dataSelected.CheckedItems[i].Text);
+                this.listMeasurestab2.Items[i].SubItems.Add(dataSelected.CheckedItems[i].SubItems[1]);
 
                 Classes.Templates.MeasureAndId checkeditem = new Classes.Templates.MeasureAndId();
 
@@ -79,7 +71,7 @@ namespace PoseidoneDataCleaner
                 checkeditems.Add(checkeditem);
 
             }
-            samples = new List<Classes.Templates.Sample>[0];
+            
 
             int z = 0; 
 
@@ -138,34 +130,34 @@ namespace PoseidoneDataCleaner
 
                 //Fill graph
                 int index = 0;
-                foreach(List<Classes.Templates.Sample> sampless in samples)
-                {
-                    //non va mai su "else".
-                    //nuovo chart? LIBRERIA SCOTTPLOTT. https://scottplot.net/
-                    if ((sampless.Count <= 0) || (sampless.ElementAt(0).stationName == listMeasures.SelectedItems[0].SubItems[0].Text && sampless.ElementAt(0).name == listMeasures.SelectedItems[0].SubItems[1].Text))
-                    {
+                //foreach(List<Classes.Templates.Sample> sampless in samples)
+                //{
+                //    //non va mai su "else".
+                //    //nuovo chart? LIBRERIA SCOTTPLOTT. https://scottplot.net/
+                //    if ((sampless.Count <= 0) || (sampless.ElementAt(0).stationName == listMeasures.SelectedItems[0].SubItems[0].Text && sampless.ElementAt(0).name == listMeasures.SelectedItems[0].SubItems[1].Text))
+                //    {
                         
                         
-                    }
-                    else
-                    {
-                        index++;
-                    }
+                //    }
+                //    else
+                //    {
+                //        index++;
+                //    }
 
 
-                }
+                //}
 
-                var selectedObject = samples[index];
+                //var selectedObject = samples[index];
                 
-                crtData.Titles.Add(selectedObject[0].stationName + " - " + selectedObject[0].name);
-                for (int i = 0; i < crtData.Series[0].Points.Count; i++)
-                {
-                    crtData.Series[0].Points.RemoveAt(i);
-                }
-                for (int i = 0; i < selectedObject.Count; i++)
-                {
-                    crtData.Series[0].Points.AddY(selectedObject[i].value);
-                }
+                //crtData.Titles.Add(selectedObject[0].stationName + " - " + selectedObject[0].name);
+                //for (int i = 0; i < crtData.Series[0].Points.Count; i++)
+                //{
+                //    crtData.Series[0].Points.RemoveAt(i);
+                //}
+                //for (int i = 0; i < selectedObject.Count; i++)
+                //{
+                //    crtData.Series[0].Points.AddY(selectedObject[i].value);
+                //}
 
                 lblMeasure.Text = listMeasures.SelectedItems[0].SubItems[0].Text + " - " + listMeasures.SelectedItems[0].SubItems[1].Text;
                 if (settingsOveritems.Exists(x => x.sample.stationName == listMeasures.SelectedItems[0].SubItems[0].Text && x.sample.name == listMeasures.SelectedItems[0].SubItems[1].Text))
@@ -253,7 +245,7 @@ namespace PoseidoneDataCleaner
             //Thread tGen = new Thread(new ThreadStart(GenerateFile));
             //tGen.Start();ù
             int counter = 0;
-            lenghtProgressBar = samples.Length;
+            lenghtProgressBar = samples.Count;
             for(int i = 0; i < threads.Count; i++)
             {
                 if(threads[i].ThreadState == ThreadState.Stopped)
@@ -301,8 +293,7 @@ namespace PoseidoneDataCleaner
                         }
                         else
                         {
-                            System.IO.Directory.Delete(dInfo.ToString() + "\\" + "Original Data" + "\\" + sample.ElementAt(j).stationName, true);
-                            System.IO.Directory.CreateDirectory(dInfo.ToString() + "\\" + "Original Data" + "\\" + sample.ElementAt(j).stationName);
+
                             Directorystation = new DirectoryInfo(dInfo.ToString() + "\\" + "Original Data" + "\\" + sample.ElementAt(j).stationName);
                             DirectorySecurity dsecStation = Directorystation.GetAccessControl();
                             dsecStation.AddAccessRule(new FileSystemAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), FileSystemRights.FullControl, InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit, PropagationFlags.None, AccessControlType.Allow));
@@ -324,12 +315,18 @@ namespace PoseidoneDataCleaner
                         }
 
                     }
+
                     j++;
                 }
+                
                 Classes.StatisticsTools.Filter f = new Classes.StatisticsTools.Filter();
-                List<Classes.Templates.Sample>[] median = f.MedianFilter(settingsOveritems, samples, (int)nudMedianFilterRepetions.Value);
+                List<List<Classes.Templates.Sample>> median = f.MedianFilter(settingsOveritems, originalValules, (int)nudMedianFilterRepetions.Value);
                 samples = median;
                 int i = 0; 
+                if(samples.Count == 0)
+                {
+                    MessageBox.Show("No samples detected", "No samples!");
+                }
                 foreach (List<Classes.Templates.Sample> sample1 in samples)
                 {
                     if (sample1.Count > 0)
@@ -349,6 +346,7 @@ namespace PoseidoneDataCleaner
                             {
                                 var path1 = dInfo.ToString() + "\\" + sample1.ElementAt(0).stationName + "\\" + sample1.ElementAt(0).name + ".txt";
                                 WriteOnFile(path1, sample1);
+                                generationEnd = true;
                             }
                             catch (Exception ex)
                             {
@@ -358,13 +356,12 @@ namespace PoseidoneDataCleaner
                         else
                         {
                          
-                            System.IO.Directory.Delete(dInfo.ToString() + "\\" + sample1.ElementAt(0).stationName, true);
-                            System.IO.Directory.CreateDirectory(dInfo.ToString() + "\\" + sample1.ElementAt(0).stationName);
+
                             Directorystation = new DirectoryInfo(dInfo.ToString() + "\\" + sample1.ElementAt(0).stationName);
                             DirectorySecurity dsecStation = Directorystation.GetAccessControl();
                             dsecStation.AddAccessRule(new FileSystemAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), FileSystemRights.FullControl, InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit, PropagationFlags.None, AccessControlType.Allow));
                             Directorystation.SetAccessControl(dsecStation);
-
+                            generationEnd = true;
 
 
                             //new Thread (new ParameterizedThreadStart(myMethod));
@@ -381,6 +378,10 @@ namespace PoseidoneDataCleaner
                         }
                         
                     }
+                    else
+                    {
+                        
+                    }
                     i++;
                 }
 
@@ -395,7 +396,7 @@ namespace PoseidoneDataCleaner
                 MessageBox.Show("Wait until samples are fully loaded", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             generatefile = false;
-            generationEnd = true;
+            
             threadLoading = false; 
 
         }
@@ -441,8 +442,12 @@ namespace PoseidoneDataCleaner
                 listofSamples.ElementAt(j).stationName = measure.stationName;
                 listofSamples.ElementAt(j).name = measure.name;
             }
-            samples = samples.Append(listofSamples).ToArray();
-            originalValules.Add(listofSamples);
+            if(listofSamples.Count > 0)
+            {
+                samples.Add(listofSamples);
+                originalValules.Add(listofSamples);
+            }
+            
 
         }
 
@@ -485,19 +490,57 @@ namespace PoseidoneDataCleaner
         }
         public void WriteOnFile(string path, List<Classes.Templates.Sample> samples)
         {
-            StreamWriter sw = new StreamWriter(path, true);
-            sw.WriteLine(samples.ElementAt(0).stationName);
-            sw.WriteLine(samples.ElementAt(0).name + ";");
-            for (int i = 0; i < samples.Count; i++)
+            
+            if (File.Exists(path))
             {
-                sw.WriteLine(samples.ElementAt(i).datetime.ToString("G") + ";\t" + samples.ElementAt(i).value);
+                File.Delete(path);
             }
-            sw.Close();
-            ValueProgressBar++;
+           
+                StreamWriter sw = new StreamWriter(path);
+                sw.WriteLine(samples.ElementAt(0).stationName);
+                sw.WriteLine(samples.ElementAt(0).name + ";");
+                for (int i = 0; i < samples.Count; i++)
+                {
+                    sw.WriteLine(samples.ElementAt(i).datetime.ToString("G") + ";\t" + samples.ElementAt(i).value);
+                }
+                sw.Close();
+                ValueProgressBar++;
+
+            
         }
+
 
         #endregion
 
- 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            for(int i = 0; i < originalValules.Count; i++)
+            {
+                List<Sample> list = new List<Sample>();
+                int num = originalValules[i].Count;
+                for(int j = 0; j < num ; j++)
+                {
+                    if(nudHours.Value > 0)
+                    {
+                        if (originalValules[i].ElementAt(j).datetime.Hour % (int)nudHours.Value == 0 && originalValules[i].ElementAt(j).datetime.Minute % (int)nudMinutes.Value == 0)
+                        {
+                            list.Add(originalValules[i].ElementAt(j));
+                            
+                        }
+                    }
+                    else
+                    {
+                        if (originalValules[i].ElementAt(j).datetime.Minute % (int)nudMinutes.Value == 0)
+                        {
+                            list.Add(originalValules[i].ElementAt(j));
+                        }
+                    }
+                    
+                }
+
+                subSamples.Add(list);
+            }
+            originalValules = subSamples;
+        }
     }
 }

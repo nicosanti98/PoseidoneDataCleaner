@@ -30,8 +30,8 @@ namespace PoseidoneDataCleaner
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.crtData = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -57,6 +57,15 @@ namespace PoseidoneDataCleaner
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.fbdPath = new System.Windows.Forms.FolderBrowserDialog();
             this.timerProgressBar = new System.Windows.Forms.Timer(this.components);
+            this.listMeasurestab2 = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.nudHours = new System.Windows.Forms.NumericUpDown();
+            this.nudMinutes = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.btnSubSampling = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.crtData)).BeginInit();
@@ -64,6 +73,9 @@ namespace PoseidoneDataCleaner
             ((System.ComponentModel.ISupportInitialize)(this.nudSampleNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudHigTreshold)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudLowTreshold)).BeginInit();
+            this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudHours)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudMinutes)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -72,7 +84,7 @@ namespace PoseidoneDataCleaner
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Location = new System.Drawing.Point(2, -1);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(589, 816);
@@ -98,9 +110,9 @@ namespace PoseidoneDataCleaner
             this.tabPage1.Controls.Add(this.label1);
             this.tabPage1.Controls.Add(this.nudLowTreshold);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(2);
             this.tabPage1.Size = new System.Drawing.Size(581, 790);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Median Filter";
@@ -108,15 +120,15 @@ namespace PoseidoneDataCleaner
             // 
             // crtData
             // 
-            chartArea1.Name = "ChartArea1";
-            this.crtData.ChartAreas.Add(chartArea1);
+            chartArea2.Name = "ChartArea1";
+            this.crtData.ChartAreas.Add(chartArea2);
             this.crtData.Location = new System.Drawing.Point(24, 504);
-            this.crtData.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.crtData.Margin = new System.Windows.Forms.Padding(2);
             this.crtData.Name = "crtData";
             this.crtData.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Bright;
-            series1.ChartArea = "ChartArea1";
-            series1.Name = "Series1";
-            this.crtData.Series.Add(series1);
+            series2.ChartArea = "ChartArea1";
+            series2.Name = "Series1";
+            this.crtData.Series.Add(series2);
             this.crtData.Size = new System.Drawing.Size(522, 236);
             this.crtData.TabIndex = 15;
             this.crtData.Text = "Samples Chart";
@@ -209,7 +221,7 @@ namespace PoseidoneDataCleaner
             this.listMeasures.FullRowSelect = true;
             this.listMeasures.HideSelection = false;
             this.listMeasures.Location = new System.Drawing.Point(24, 261);
-            this.listMeasures.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.listMeasures.Margin = new System.Windows.Forms.Padding(2);
             this.listMeasures.Name = "listMeasures";
             this.listMeasures.Size = new System.Drawing.Size(523, 240);
             this.listMeasures.TabIndex = 9;
@@ -230,7 +242,7 @@ namespace PoseidoneDataCleaner
             // btnGenerateFile
             // 
             this.btnGenerateFile.Location = new System.Drawing.Point(460, 755);
-            this.btnGenerateFile.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnGenerateFile.Margin = new System.Windows.Forms.Padding(2);
             this.btnGenerateFile.Name = "btnGenerateFile";
             this.btnGenerateFile.Size = new System.Drawing.Size(86, 28);
             this.btnGenerateFile.TabIndex = 8;
@@ -257,7 +269,7 @@ namespace PoseidoneDataCleaner
             0,
             0});
             this.nudSampleNum.Location = new System.Drawing.Point(192, 171);
-            this.nudSampleNum.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.nudSampleNum.Margin = new System.Windows.Forms.Padding(2);
             this.nudSampleNum.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -291,7 +303,7 @@ namespace PoseidoneDataCleaner
             // nudHigTreshold
             // 
             this.nudHigTreshold.Location = new System.Drawing.Point(192, 127);
-            this.nudHigTreshold.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.nudHigTreshold.Margin = new System.Windows.Forms.Padding(2);
             this.nudHigTreshold.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -324,7 +336,7 @@ namespace PoseidoneDataCleaner
             // nudLowTreshold
             // 
             this.nudLowTreshold.Location = new System.Drawing.Point(192, 85);
-            this.nudLowTreshold.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.nudLowTreshold.Margin = new System.Windows.Forms.Padding(2);
             this.nudLowTreshold.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -336,20 +348,27 @@ namespace PoseidoneDataCleaner
             // 
             // tabPage2
             // 
+            this.tabPage2.BackColor = System.Drawing.Color.Transparent;
+            this.tabPage2.Controls.Add(this.btnSubSampling);
+            this.tabPage2.Controls.Add(this.label7);
+            this.tabPage2.Controls.Add(this.label6);
+            this.tabPage2.Controls.Add(this.label5);
+            this.tabPage2.Controls.Add(this.nudMinutes);
+            this.tabPage2.Controls.Add(this.nudHours);
+            this.tabPage2.Controls.Add(this.listMeasurestab2);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage2.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(2);
             this.tabPage2.Size = new System.Drawing.Size(581, 790);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "tabPage2";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabPage2.Text = "SubSampling";
             // 
             // tabPage3
             // 
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage3.Size = new System.Drawing.Size(581, 790);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "tabPage3";
@@ -361,13 +380,104 @@ namespace PoseidoneDataCleaner
             this.timerProgressBar.Interval = 1;
             this.timerProgressBar.Tick += new System.EventHandler(this.timerProgressBar_Tick);
             // 
+            // listMeasurestab2
+            // 
+            this.listMeasurestab2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2});
+            this.listMeasurestab2.FullRowSelect = true;
+            this.listMeasurestab2.HideSelection = false;
+            this.listMeasurestab2.Location = new System.Drawing.Point(29, 275);
+            this.listMeasurestab2.Margin = new System.Windows.Forms.Padding(2);
+            this.listMeasurestab2.Name = "listMeasurestab2";
+            this.listMeasurestab2.Size = new System.Drawing.Size(523, 240);
+            this.listMeasurestab2.TabIndex = 10;
+            this.listMeasurestab2.UseCompatibleStateImageBehavior = false;
+            this.listMeasurestab2.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Station";
+            this.columnHeader1.Width = 257;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Measure Name";
+            this.columnHeader2.Width = 184;
+            // 
+            // nudHours
+            // 
+            this.nudHours.Location = new System.Drawing.Point(32, 51);
+            this.nudHours.Name = "nudHours";
+            this.nudHours.Size = new System.Drawing.Size(120, 20);
+            this.nudHours.TabIndex = 11;
+            // 
+            // nudMinutes
+            // 
+            this.nudMinutes.Location = new System.Drawing.Point(32, 79);
+            this.nudMinutes.Maximum = new decimal(new int[] {
+            59,
+            0,
+            0,
+            0});
+            this.nudMinutes.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudMinutes.Name = "nudMinutes";
+            this.nudMinutes.Size = new System.Drawing.Size(120, 20);
+            this.nudMinutes.TabIndex = 12;
+            this.nudMinutes.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(35, 26);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(105, 13);
+            this.label5.TabIndex = 13;
+            this.label5.Text = "Take samples every:";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(166, 54);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(35, 13);
+            this.label6.TabIndex = 14;
+            this.label6.Text = "Hours";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(165, 82);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(44, 13);
+            this.label7.TabIndex = 15;
+            this.label7.Text = "Minutes";
+            // 
+            // btnSubSampling
+            // 
+            this.btnSubSampling.Location = new System.Drawing.Point(34, 150);
+            this.btnSubSampling.Name = "btnSubSampling";
+            this.btnSubSampling.Size = new System.Drawing.Size(118, 42);
+            this.btnSubSampling.TabIndex = 16;
+            this.btnSubSampling.Text = "Start SubSampling Procedure";
+            this.btnSubSampling.UseVisualStyleBackColor = true;
+            this.btnSubSampling.Click += new System.EventHandler(this.button1_Click);
+            // 
             // frmMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(592, 815);
             this.Controls.Add(this.tabControl1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.Name = "frmMenu";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -380,6 +490,10 @@ namespace PoseidoneDataCleaner
             ((System.ComponentModel.ISupportInitialize)(this.nudSampleNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudHigTreshold)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudLowTreshold)).EndInit();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudHours)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudMinutes)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -411,5 +525,14 @@ namespace PoseidoneDataCleaner
         private System.Windows.Forms.NumericUpDown nudMedianFilterRepetions;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.DataVisualization.Charting.Chart crtData;
+        private System.Windows.Forms.ListView listMeasurestab2;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.Button btnSubSampling;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.NumericUpDown nudMinutes;
+        private System.Windows.Forms.NumericUpDown nudHours;
     }
 }
