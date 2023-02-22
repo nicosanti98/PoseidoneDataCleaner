@@ -151,5 +151,8 @@
   <ItemGroup>
     <None Include="Resources\logo_menerva-600x119.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="usefulFiles\Dates.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

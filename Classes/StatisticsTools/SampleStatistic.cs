@@ -9,7 +9,7 @@ namespace PoseidoneDataCleaner.Classes.StatisticsTools
 {
     class SampleStatistic
     {
-        public Sample sample { get; set; }
+        public Classes.Templates.Sample sample { get; set; }
 
         public float lowTreshold { get; set; }
         public float highTreshold { get; set; }

@@ -1,4 +1,5 @@
-﻿using PoseidoneDataCleaner.Classes.Templates;
+﻿using PoseidoneDataCleaner.Classes.StatisticsTools;
+using PoseidoneDataCleaner.Classes.Templates;
 using System;
 using System.Collections.Generic;
 using System.Data.Odbc;
@@ -73,16 +74,16 @@ namespace PoseidoneDataCleaner
             }
             
 
-            int z = 0; 
+            int z = 0;
 
-            while(z < checkeditems.Count)
+            while (z < checkeditems.Count)
             {
                 MeasureAndId sboccodesangue = checkeditems.ElementAt(z);
                 z++;
                 threads.Add(new Thread(() => GetSamples(menervaDbComponent, sboccodesangue)));
             }
-          
-            foreach(Thread t in threads)
+
+            foreach (Thread t in threads)
             {
                 t.Start();
             }
@@ -283,7 +284,7 @@ namespace PoseidoneDataCleaner
                             //new Thread (new ParameterizedThreadStart(myMethod));
                             try
                             {
-                                path = dInfo.ToString() + "\\" + "Original Data" + "\\" + sample.ElementAt(0).stationName + "\\" + sample.ElementAt(0).name + ".txt";
+                                path = dInfo.ToString() + "\\" + "Original Data" + "\\" + sample.ElementAt(0).stationName +  "\\[ORIGINAL]" + sample.ElementAt(0).name + ".txt";
                                 WriteOnFile(path, sample);
                             }
                             catch (Exception ex)
@@ -319,9 +320,28 @@ namespace PoseidoneDataCleaner
                     j++;
                 }
                 
+                
                 Classes.StatisticsTools.Filter f = new Classes.StatisticsTools.Filter();
-                List<List<Classes.Templates.Sample>> median = f.MedianFilter(settingsOveritems, originalValules, (int)nudMedianFilterRepetions.Value);
-                samples = median;
+                List<List<Classes.Templates.Sample>> toFIlter = new List<List<Classes.Templates.Sample>>();
+                bool found = false;
+                foreach (SampleStatistic setting in settingsOveritems)
+                {
+                    for (int k = 0; k < originalValules.Count; k++)
+                    {
+                        if ((originalValules.ElementAt(k).ElementAt(0).name == setting.sample.name) && (originalValules.ElementAt(k).ElementAt(0).stationName == setting.sample.stationName))
+                        {
+                            toFIlter.Add(originalValules.ElementAt(k));
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+                if (found)
+                {
+                    List<List<Classes.Templates.Sample>> median = f.MedianFilter(settingsOveritems, toFIlter, (int)nudMedianFilterRepetions.Value);
+                    samples = median;
+                }
+
                 int i = 0; 
                 if(samples.Count == 0)
                 {
@@ -444,6 +464,7 @@ namespace PoseidoneDataCleaner
             }
             if(listofSamples.Count > 0)
             {
+                listofSamples = Classes.Templates.Sample.NormalizeDates(listofSamples);
                 samples.Add(listofSamples);
                 originalValules.Add(listofSamples);
             }
@@ -470,7 +491,7 @@ namespace PoseidoneDataCleaner
             }
 
             Classes.StatisticsTools.SampleStatistic statItem = new Classes.StatisticsTools.SampleStatistic();
-            statItem.sample = item;
+            statItem.sample = item.CreateSample();
             statItem.lowTreshold = float.Parse(nudLowTreshold.Value.ToString());
             statItem.highTreshold = float.Parse(nudHigTreshold.Value.ToString());
             statItem.SamplesRange = int.Parse(nudSampleNum.Value.ToString());
@@ -541,6 +562,11 @@ namespace PoseidoneDataCleaner
                 subSamples.Add(list);
             }
             originalValules = subSamples;
+        }
+
+        private void frmMenu_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

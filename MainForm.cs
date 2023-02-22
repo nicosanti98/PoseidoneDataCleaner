@@ -60,6 +60,11 @@ namespace PoseidoneDataCleaner
                 MessageBox.Show("You have to check at least one measure.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 
 

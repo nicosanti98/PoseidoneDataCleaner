@@ -31,10 +31,10 @@ namespace PoseidoneDataCleaner.Classes.StatisticsTools
             {
                 for(int j = 0; j < originalSamples.Count; j++)
                 {
-                    if(originalSamples[j].Count > 0)
+                    if(originalSamples.ElementAt(j).Count > 0)
                     {
-                        float HighTreshold = settings.ElementAt(0).highTreshold;
-                        float LowTreshold = settings.ElementAt(0).lowTreshold;
+                        float HighTreshold = settings.ElementAt(j).highTreshold;
+                        float LowTreshold = settings.ElementAt(j).lowTreshold;
                         sampleStatistic = GetSettingsById(samples[j].ElementAt(0), settings);
                         //value = new double[sampleStatistic.SamplesRange];
                         WindowSize = sampleStatistic.SamplesRange;
@@ -42,19 +42,19 @@ namespace PoseidoneDataCleaner.Classes.StatisticsTools
                         List<Classes.Templates.Sample> zeros = new List<Templates.Sample>();
 
                         //Lead all values inside the interval defined by tresholds
-                        //for(int z = 0; z < originalSamples[j].Count; z++)
-                        //{
-                        //    if(originalSamples[j][z].value < LowTreshold)
-                        //    {
-                        //        originalSamples[j][z].value = LowTreshold;
-                        //    }
+                        for(int z = 0; z < originalSamples[j].Count; z++)
+                        {
+                            if(originalSamples[j][z].value < LowTreshold)
+                            {
+                                originalSamples[j][z].value = LowTreshold;
+                            }
+                        
+                            if (originalSamples[j][z].value > HighTreshold)
+                            {
+                                originalSamples[j][z].value = HighTreshold;
+                            }
 
-                        //    if (originalSamples[j][z].value > HighTreshold)
-                        //    {
-                        //        originalSamples[j][z].value = HighTreshold;
-                        //    }
-
-                        //}
+                        }
                         zeros = addZerosToList(originalSamples[j], WindowSize);
                         int w = 0;
 
@@ -63,7 +63,7 @@ namespace PoseidoneDataCleaner.Classes.StatisticsTools
                             
                             // oggetto attuale[z] - Classes.Templates.Sample newItem;
 
-                            Classes.Templates.Sample newItem;
+                            Classes.Templates.Sample newItem = new Classes.Templates.Sample();
 
                             var Window = zeros.GetRange(z - (int)(WindowSize / 2), WindowSize);
                             Window = Window.OrderBy(x => x.value).ToList();
@@ -71,11 +71,9 @@ namespace PoseidoneDataCleaner.Classes.StatisticsTools
                             newItem = Window.ElementAt((int)(Window.Count / 2));
                             originalSamples[j].ElementAt(w).value = newItem.value;
 
-                            newList.Add(originalSamples[j]);
                             w++;
                         }
 
-                        originalSamples[j] = newList[j];
 
                     }
                     

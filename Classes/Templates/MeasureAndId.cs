@@ -16,5 +16,25 @@ namespace PoseidoneDataCleaner.Classes.Templates
         public int Flag { get; set; }
         public string stationName { get; set; }
         public double value { get; set; }
+
+        public Sample CreateSample()
+        {
+            Sample s = new Sample();
+            s.datetime = this.datetime;
+            s.value = value;
+            s.id = id;
+            s.name = name;
+            s.Flag = Flag;
+            s.stationName = stationName;
+
+
+
+            return s;
+        }
+
+
     }
+
+
+
 }
