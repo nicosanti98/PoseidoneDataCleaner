@@ -88,35 +88,41 @@ namespace PoseidoneDataCleaner.Classes.DbInteraction
             {
                 Classes.Templates.Sample item = new Classes.Templates.Sample();
                 item.datetime = DateTime.Parse(reader.Result[0].ToString());
-                if(notnull) {
-                    if(reader.Result[1].ToString() == "NULL")
+                if(item.datetime.Second == 0)
+                {
+                    if (notnull)
                     {
-                        item.value = 0;
+                        if (reader.Result[1].ToString() == "NULL")
+                        {
+                            item.value = 0;
+                        }
+                        else
+                        {
+                            item.value = double.Parse(reader.Result[1].ToString());
+                        }
+                        if (reader.Result[2].ToString() == "NULL")
+                        {
+                            item.Flag = 0;
+                        }
+                        else
+                        {
+                            item.Flag = int.Parse(reader.Result[2].ToString());
+                        }
+
                     }
                     else
                     {
                         item.value = double.Parse(reader.Result[1].ToString());
-                    }
-                    if(reader.Result[2].ToString() == "NULL")
-                    {
-                        item.Flag = 0;
-                    }
-                    else
-                    {
                         item.Flag = int.Parse(reader.Result[2].ToString());
-                    }
-                    
-                }
-                else
-                {
-                    item.value = double.Parse(reader.Result[1].ToString());
-                    item.Flag = int.Parse(reader.Result[2].ToString());
 
+                    }
+                    item.id = sampleID;
+                    list.Add(item);
                 }
                 
+                
                
-                item.id = sampleID;
-                list.Add(item);
+                
             }
 
 

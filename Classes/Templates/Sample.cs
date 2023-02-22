@@ -30,13 +30,19 @@ namespace PoseidoneDataCleaner.Classes.Templates
             }
 
             
-            for(int i = 0; i < dates.Count; i++)
-            {
-                if (!samples.Exists(x => x.datetime.Day == dates.ElementAt(i).Day &&
-                x.datetime.Year == dates.ElementAt(i).Year
-                && x.datetime.Month == dates.ElementAt(i).Month
-                && x.datetime.Hour == dates.ElementAt(i).Hour
-                && x.datetime.Minute == dates.ElementAt(i).Minute))
+            for(int i = 0; i < dates.Count; i++) { 
+            
+                if (samples[i].datetime.Year != dates[i].Year || 
+                    samples[i].datetime.Month != dates[i].Month ||
+                    samples[i].datetime.Day != dates[i].Day ||
+                    samples[i].datetime.Hour != dates[i].Hour ||
+                    samples[i].datetime.Minute != dates[i].Minute)
+                
+                //if (!samples.Exists(x => x.datetime.Day == dates.ElementAt(i).Day &&
+                //x.datetime.Year == dates.ElementAt(i).Year
+                //&& x.datetime.Month == dates.ElementAt(i).Month
+                //&& x.datetime.Hour == dates.ElementAt(i).Hour
+                //&& x.datetime.Minute == dates.ElementAt(i).Minute))
                 {
                     Sample s = new Sample();
                     s.datetime = dates.ElementAt(i);
